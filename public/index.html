@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AList Token获取工具</title>
+    <link href="static/style-all.css" rel="stylesheet">
+    <link href="static/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container" style="max-width: 1600px;">
+        <h1>AList Token获取工具</h1>
+
+        <div class="input-group">
+            <label for="site-select">OneDrive 站点</label>
+            <select id="site-select">
+                <option value="official" selected>OneDrive 官方站点</option>
+                <!--                <option value="cn">OneDrive 世纪互联</option>-->
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="client-id">客户端ID</label>
+            <input type="text" id="client-id" name="client-id">
+        </div>
+
+        <div class="input-group">
+            <label for="app-secret">应用机密</label>
+            <input type="text" id="app-secret" name="app-secret">
+        </div>
+
+        <div class="input-group">
+            <label for="callback-url">回调地址</label>
+            <input type="text" id="callback-url" name="callback-url" value="https://baidu.com/onedrive/callback"
+                   readonly>
+        </div>
+
+        <div class="input-group">
+            <button class="btn btn-success" onclick="getLogin()">获取Token</button>
+        </div>
+
+        <div class="input-group">
+            <label for="refresh-token">访问秘钥(Access Token)</label>
+            <input type="text" id="access-token" name="access-token" readonly disabled="disabled">
+        </div>
+
+        <div class="input-group">
+            <label for="refresh-token">刷新秘钥(Refresh Token)</label>
+            <input type="text" id="refresh-token" name="refresh-token" readonly disabled="disabled">
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    let intervalId;
+
+    // 获取登录秘钥 ==============================================================================
+    async function getLogin() {
+        let apps_uuid = document.getElementById("client-id").value;
+        let apps_keys = document.getElementById("app-secret").value;
+        let post_urls = "/onedrive/requests?client_uid=" + apps_uuid + "&client_key=" + apps_keys;
+        try {
+            const response = await fetch(post_urls, {
+                method: 'GET', headers: {'Content-Type': 'application/json'}
+            });
+            // 解析响应内容 ===============================================
+            const response_data = await response.json();
+            if (response.status === 200) {
+                window.open(response_data.text)
+                intervalId = setInterval(getToken, 3000);
+            } else Swal.fire({
+                icon: 'error',
+                title: "获取秘钥失败: " + response_data.text,
+                showConfirmButton: true,
+                timer: 1000
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: '获取秘钥失败: ' + error,
+                showConfirmButton: true,
+                timer: 1000
+            });
+        }
+    }
+
+    async function getToken() {
+        let apps_uuid = document.getElementById("client-id").value;
+        let post_urls = "/onedrive/gettoken?client_uid=" + apps_uuid;
+        try {
+            const response = await fetch(post_urls, {method: 'GET'});
+            // 解析响应内容 ===============================================
+            const response_data = await response.json();
+            if (response.status === 200) {
+                console.log(response_data);
+                clearInterval(intervalId);
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: '获取秘钥失败: ' + error,
+                showConfirmButton: true,
+                timer: 1000
+            });
+        }
+
+    }
+</script>
+</html>

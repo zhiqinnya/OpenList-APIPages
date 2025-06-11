@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cf-worker-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-05-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "MAIN_URLS": "example.com"
+  },
+  "site": {
+    "bucket": "./public"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "DATABASE",
+      "id": "*******************************"
+    }
+  ]
+}
