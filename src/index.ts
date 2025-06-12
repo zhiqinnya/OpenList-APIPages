@@ -9,13 +9,31 @@ export type Bindings = {
 }
 const app = new Hono<{ Bindings: Bindings }>()
 app.use("*", serveStatic({manifest: manifest, root: "./"}));
-
+const driver_map: Record<string, string[]> = {
+    "onedrive_go": [
+        'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+        'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+    ],
+    "onedrive_cn": [
+        'https://login.chinacloudapi.cn/common/oauth2/v2.0/authorize',
+        'https://microsoftgraph.chinacloudapi.cn/common/oauth2/v2.0/token'
+    ],
+    "onedrive_de": [
+        'https://login.microsoftonline.de/common/oauth2/v2.0/authorize',
+        'https://graph.microsoft.de/common/oauth2/v2.0/token'
+    ],
+    "onedrive_us": [
+        'https://login.microsoftonline.us/common/oauth2/v2.0/authorize',
+        'https://graph.microsoft.us/common/oauth2/v2.0/token'
+    ],
+}
 // 登录申请 ##############################################################################
 app.get('/onedrive/requests', async (c) => {
     const client_uid = <string>c.req.query('client_uid');
     const client_key = <string>c.req.query('client_key');
+    const driver_txt = <string>c.req.query('apps_type');
     const scopes_all = 'offline_access Files.ReadWrite.All';
-    const client_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
+    const client_url: string = driver_map[driver_txt][0];
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
         client_id: client_uid,
@@ -34,6 +52,7 @@ app.get('/onedrive/requests', async (c) => {
         });
         local.setCookie(c, 'client_uid', client_uid);
         local.setCookie(c, 'client_key', client_key);
+        local.setCookie(c, 'apps_types', driver_txt);
         return c.json({text: response.url}, 200);
     } catch (error) {
         return c.json({text: error}, 500);
@@ -42,9 +61,10 @@ app.get('/onedrive/requests', async (c) => {
 // 令牌申请 ##############################################################################
 app.get('/onedrive/callback', async (c) => {
     const login_data = <string>c.req.query('code');
-    const client_uid: string | undefined = local.getCookie(c, 'client_uid')
-    const client_key: string | undefined = local.getCookie(c, 'client_key')
-    const client_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token';
+    const client_uid: string = <string>local.getCookie(c, 'client_uid')
+    const client_key: string = <string>local.getCookie(c, 'client_key')
+    const driver_txt: string = <string>local.getCookie(c, 'apps_types')
+    const client_url: string = driver_map[driver_txt][1];
     console.log(login_data);
     // 请求参数 ==========================================================================
     const params_all = {
@@ -74,10 +94,6 @@ app.get('/onedrive/callback', async (c) => {
                 + `&refresh_token=${json.refresh_token}`
                 + `&client_uid=${client_uid}`
                 + `&client_key=${client_key}`);
-            // return c.json({
-            //     access_token: json.access_token,
-            //     refresh_token: json.refresh_token,
-            // });
         }
     } catch (error) {
         console.error(error);

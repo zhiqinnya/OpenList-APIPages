@@ -56,12 +56,53 @@
 <body>
 <div class="toggle-theme">
     <button class="btn btn-outline-secondary" onclick="toggleTheme()">切换主题</button>
-</div><div class="container form-container">
-    <h2 class="text-center mb-4">🔐 OpenList Token 获取工具</h2><div class="mb-3">
+</div>
+<div class="container form-container">
+    <h2 class="text-center mb-4">🔐 OpenList Token 获取工具</h2>
+  <div class="mb-3">
     <label for="site-select" class="form-label">网盘名称</label>
     <select id="site-select" class="form-select">
-        <option value="official" selected>OneDrive 官方站点</option>
+                <option value="onedrive_go" selected>OneDrive 官方站点</option>
+                <option value="onedrive_cn">OneDrive 世纪互联</option>
+                <option value="onedrive_us">OneDrive 美国版本</option>
+                <option value="onedrive_de">OneDrive 德国版本</option>
     </select>
+
+
+        <div class="input-group">
+            <label for="client-id">客户端ID(Client ID)</label>
+            <input type="text" id="client-id" name="client-id">
+        </div>
+
+        <div class="input-group">
+            <label for="app-secret">应用机密(App Secret)</label>
+            <input type="text" id="app-secret" name="app-secret">
+        </div>
+
+        <div class="input-group">
+            <label for="callback-url">回调地址(Callback URL)</label>
+            <input type="text" id="callback-url" name="callback-url" value="https://api.oplist.org/onedrive/callback"
+                   readonly onclick="autoCopy(this)">
+        </div>
+
+        <div class="input-group">
+            <button class="btn btn-success" onclick="getLogin()">获取Token</button>
+        </div>
+
+        <div class="input-group">
+            <label for="access-token">访问秘钥(Access Token)</label>
+            <textarea type="text" id="access-token" name="access-token" readonly onclick="autoCopy(this)"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="refresh-token">刷新秘钥(Refresh Token)</label>
+            <textarea type="text" id="refresh-token" name="refresh-token" readonly onclick="autoCopy(this)"></textarea>
+        </div>
+
+        <div class="input-group">
+            本工具所有信息只以Cookie形式存储于浏览器本地，开源于<a href="https://github.com/OpenListTeam/cf-worker-api">CF-Worker-API</a>
+        </div>
+    </div>
 </div>
 
 <div class="mb-3">
@@ -108,6 +149,7 @@
     async function getLogin() {
         let apps_uuid = document.getElementById("client-id").value;
         let apps_keys = document.getElementById("app-secret").value;
+        let apps_type = document.getElementById("site-select").value;
         if (apps_uuid === "" || apps_keys === "") {
             Swal.fire({
                 position: 'top',
@@ -119,7 +161,7 @@
             return;
         }
         let post_urls = "/onedrive/requests?client_uid=" + apps_uuid
-            + "&client_key=" + apps_keys;
+            + "&client_key=" + apps_keys + "&apps_type=" + apps_type;
         try {
             const response = await fetch(post_urls, {
                 method: 'GET', headers: {'Content-Type': 'application/json'}
