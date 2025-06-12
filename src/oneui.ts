@@ -123,3 +123,7 @@ export async function oneToken(c: Context) {
             + `&client_key=${client_key}`);
     }
 }
+// 获取SharePoint Site ID ##############################################################################
+export async function getSiteID(c: Context) {
+
+}

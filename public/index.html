@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN" data-theme="light" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,7 +139,13 @@
             <label for="refresh-token" class="form-label">刷新秘钥</label>
             <textarea id="refresh-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
         </div>
-
+        <div class="mb-3">
+            <label for="sharepoint_url" class="form-label">SharePoint Site URL</label>
+            <label for="sharepoint-url"></label><input type="text" id="sharepoint-url" class="form-control">
+        </div>
+        <div class="d-grid gap-2 mb-3">
+            <button class="btn btn-primary" onclick="getSiteID()">获取 SharePoint 站点ID</button>
+        </div>
         <div class="text-muted text-center">
             <p style="text-align:center">
                 本工具所有信息只以Cookie形式存储于浏览器本地<br>
@@ -271,7 +277,9 @@
     }
 
     getToken();
+    function getSiteID(){
 
+    }
     //手动切换主题模式
     function toggleTheme() {
         const html = document.documentElement;
