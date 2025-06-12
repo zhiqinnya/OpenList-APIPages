@@ -1,3 +1,5 @@
+# OpenList API Token Generator
+
 ```txt
 npm install
 npm run dev
