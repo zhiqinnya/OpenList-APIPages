@@ -7,15 +7,9 @@
     "nodejs_compat"
   ],
   "vars": {
-    "MAIN_URLS": "example.com"
+    "MAIN_URLS": "api.oplist.org"
   },
   "site": {
     "bucket": "./public"
   },
-  "kv_namespaces": [
-    {
-      "binding": "DATABASE",
-      "id": "*******************************"
-    }
-  ]
 }

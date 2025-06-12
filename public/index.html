@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AList Token获取工具</title>
+    <title>OpenList Token获取工具</title>
     <link href="static/style-all.css" rel="stylesheet">
     <link href="static/bootstrap.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -14,10 +14,10 @@
 <body>
 <div class="container">
     <div class="form-container" style="max-width: 1600px;">
-        <h1>AList Token获取工具</h1>
+        <h1>OpenList Token获取工具</h1>
 
         <div class="input-group">
-            <label for="site-select">OneDrive 站点</label>
+            <label for="site-select">网盘名称</label>
             <select id="site-select">
                 <option value="official" selected>OneDrive 官方站点</option>
                 <!--                <option value="cn">OneDrive 世纪互联</option>-->
@@ -25,19 +25,19 @@
         </div>
 
         <div class="input-group">
-            <label for="client-id">客户端ID</label>
+            <label for="client-id">客户端ID(Client ID)</label>
             <input type="text" id="client-id" name="client-id">
         </div>
 
         <div class="input-group">
-            <label for="app-secret">应用机密</label>
+            <label for="app-secret">应用机密(App Secret)</label>
             <input type="text" id="app-secret" name="app-secret">
         </div>
 
         <div class="input-group">
-            <label for="callback-url">回调地址</label>
-            <input type="text" id="callback-url" name="callback-url" value="https://baidu.com/onedrive/callback"
-                   readonly>
+            <label for="callback-url">回调地址(Callback URL)</label>
+            <input type="text" id="callback-url" name="callback-url" value="https://api.oplist.org/onedrive/callback"
+                   readonly onclick="autoCopy(this)">
         </div>
 
         <div class="input-group">
@@ -45,13 +45,13 @@
         </div>
 
         <div class="input-group">
-            <label for="refresh-token">访问秘钥(Access Token)</label>
-            <input type="text" id="access-token" name="access-token" readonly disabled="disabled">
+            <label for="access-token">访问秘钥(Access Token)</label>
+            <textarea type="text" id="access-token" name="access-token" readonly onclick="autoCopy(this)"></textarea>
         </div>
 
         <div class="input-group">
             <label for="refresh-token">刷新秘钥(Refresh Token)</label>
-            <input type="text" id="refresh-token" name="refresh-token" readonly disabled="disabled">
+            <textarea type="text" id="refresh-token" name="refresh-token" readonly onclick="autoCopy(this)"></textarea>
         </div>
     </div>
 </div>
@@ -60,11 +60,22 @@
 <script>
     let intervalId;
 
-    // 获取登录秘钥 ==============================================================================
+    // 获取登录秘钥 #######################################################
     async function getLogin() {
         let apps_uuid = document.getElementById("client-id").value;
         let apps_keys = document.getElementById("app-secret").value;
-        let post_urls = "/onedrive/requests?client_uid=" + apps_uuid + "&client_key=" + apps_keys;
+        if (apps_uuid === "" || apps_keys === "") {
+            Swal.fire({
+                position: 'top',
+                icon: 'info',
+                title: '获取失败',
+                text: '请先填写客户端ID和应用机密',
+                showConfirmButton: true,
+            });
+            return;
+        }
+        let post_urls = "/onedrive/requests?client_uid=" + apps_uuid
+            + "&client_key=" + apps_keys;
         try {
             const response = await fetch(post_urls, {
                 method: 'GET', headers: {'Content-Type': 'application/json'}
@@ -72,8 +83,8 @@
             // 解析响应内容 ===============================================
             const response_data = await response.json();
             if (response.status === 200) {
-                window.open(response_data.text)
-                intervalId = setInterval(getToken, 3000);
+                // window.open(response_data.text)
+                window.location.href = response_data.text;
             } else Swal.fire({
                 icon: 'error',
                 title: "获取秘钥失败: " + response_data.text,
@@ -90,26 +101,44 @@
         }
     }
 
-    async function getToken() {
-        let apps_uuid = document.getElementById("client-id").value;
-        let post_urls = "/onedrive/gettoken?client_uid=" + apps_uuid;
-        try {
-            const response = await fetch(post_urls, {method: 'GET'});
-            // 解析响应内容 ===============================================
-            const response_data = await response.json();
-            if (response.status === 200) {
-                console.log(response_data);
-                clearInterval(intervalId);
-            }
-        } catch (error) {
+    // 自动复制内容 #####################################################
+    function autoCopy(on_element) {
+        // if (on_element.innerText === "") return;
+        navigator.clipboard.writeText(on_element.value).then(() => {
+            // 显示复制成功的提示
             Swal.fire({
-                icon: 'error',
-                title: '获取秘钥失败: ' + error,
-                showConfirmButton: true,
-                timer: 1000
+                position: 'top',
+                icon: 'success',
+                title: '内容已复制',
+                showConfirmButton: false,
+                timer: 700
             });
-        }
-
+        }).catch(err => {
+            // 复制失败时的处理
+            console.error('无法复制文本：', err);
+            Swal.fire({
+                position: 'top',
+                icon: 'error',
+                title: '复制失败',
+                text: '请手动复制',
+                showConfirmButton: true,
+            });
+        })
     }
+
+    async function getToken() {
+        const strSearch = window.location.search;
+        const urlParams = new URLSearchParams(strSearch);
+        const client_uid = urlParams.get("client_uid");
+        const client_key = urlParams.get("client_key");
+        const access_token = urlParams.get("access_token");
+        const refresh_token = urlParams.get("refresh_token");
+        document.getElementById("client-id").value = client_uid;
+        document.getElementById("app-secret").value = client_key;
+        document.getElementById("access-token").value = access_token;
+        document.getElementById("refresh-token").value = refresh_token;
+    }
+
+    getToken();
 </script>
 </html>
