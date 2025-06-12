@@ -19,8 +19,10 @@
         <div class="input-group">
             <label for="site-select">网盘名称</label>
             <select id="site-select">
-                <option value="official" selected>OneDrive 官方站点</option>
-                <!--                <option value="cn">OneDrive 世纪互联</option>-->
+                <option value="onedrive_go" selected>OneDrive 官方站点</option>
+                <option value="onedrive_cn">OneDrive 世纪互联</option>
+                <option value="onedrive_us">OneDrive 美国版本</option>
+                <option value="onedrive_de">OneDrive 德国版本</option>
             </select>
         </div>
 
@@ -55,7 +57,7 @@
         </div>
 
         <div class="input-group">
-            本获取工具不存储任何用户信息，开源于<a href="https://github.com/OpenListTeam/cf-worker-api">CF-Worker-API</a>
+            本工具所有信息只以Cookie形式存储于浏览器本地，开源于<a href="https://github.com/OpenListTeam/cf-worker-api">CF-Worker-API</a>
         </div>
     </div>
 </div>
@@ -68,6 +70,7 @@
     async function getLogin() {
         let apps_uuid = document.getElementById("client-id").value;
         let apps_keys = document.getElementById("app-secret").value;
+        let apps_type = document.getElementById("site-select").value;
         if (apps_uuid === "" || apps_keys === "") {
             Swal.fire({
                 position: 'top',
@@ -79,7 +82,7 @@
             return;
         }
         let post_urls = "/onedrive/requests?client_uid=" + apps_uuid
-            + "&client_key=" + apps_keys;
+            + "&client_key=" + apps_keys + "&apps_type=" + apps_type;
         try {
             const response = await fetch(post_urls, {
                 method: 'GET', headers: {'Content-Type': 'application/json'}
