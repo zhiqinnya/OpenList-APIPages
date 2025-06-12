@@ -60,20 +60,33 @@ app.get('/onedrive/requests', async (c) => {
 })
 // 令牌申请 ##############################################################################
 app.get('/onedrive/callback', async (c) => {
-    const login_data = <string>c.req.query('code');
-    const client_uid: string = <string>local.getCookie(c, 'client_uid')
-    const client_key: string = <string>local.getCookie(c, 'client_key')
-    const driver_txt: string = <string>local.getCookie(c, 'apps_types')
-    const client_url: string = driver_map[driver_txt][1];
-    console.log(login_data);
-    // 请求参数 ==========================================================================
-    const params_all = {
-        client_id: client_uid,
-        client_secret: client_key,
-        redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback',
-        code: login_data,
-        grant_type: 'authorization_code'
-    };
+    let login_data, client_uid, client_key, driver_txt, client_url, params_all;
+    try { // 请求参数 ====================================================================
+        login_data = <string>c.req.query('code');
+        client_uid = <string>local.getCookie(c, 'client_uid')
+        client_key = <string>local.getCookie(c, 'client_key')
+        driver_txt = <string>local.getCookie(c, 'apps_types')
+        client_url = driver_map[driver_txt][1];
+        params_all = {
+            client_id: client_uid,
+            client_secret: client_key,
+            redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback',
+            code: login_data,
+            grant_type: 'authorization_code'
+        };
+    } catch (error) {
+        return c.redirect(
+            `/?message_err=${"授权失败，请检查: <br>" +
+            "1、应用ID和应用机密是否正确<br>" +
+            "2、登录账号是否具有应用权限<br>" +
+            "3、回调地址是否包括上面地址<br>" +
+            "4、登录可能过期，请重新登录<br>" +
+            "错误信息: <br> " + error}`
+            + `&client_uid=NULL`
+            + `&client_key=`);
+    }
+    // console.log(login_data);
+
     // 执行请求 ===========================================================================
     try {
         const paramsString = new URLSearchParams(params_all).toString();
@@ -84,9 +97,19 @@ app.get('/onedrive/callback', async (c) => {
             },
             body: paramsString,
         });
-        console.log(response);
+        // console.log(response);
+        local.deleteCookie(c, 'client_uid');
+        local.deleteCookie(c, 'client_key');
+        local.deleteCookie(c, 'apps_types');
         if (!response.ok)
-            return c.json({text: response.text()}, 403);
+            return c.redirect(
+                `/?message_err=${"授权失败，请检查: <br>" +
+                "1、应用ID和应用机密是否正确<br>" +
+                "2、登录账号是否具有应用权限<br>" +
+                "3、回调地址是否包括上面地址<br>" +
+                "错误信息: <br>" + response.text()}`
+                + `&client_uid=${client_uid}`
+                + `&client_key=${client_key}`);
         const json: Record<string, any> = await response.json();
         if (json.token_type === 'Bearer') {
             return c.redirect(
@@ -96,8 +119,14 @@ app.get('/onedrive/callback', async (c) => {
                 + `&client_key=${client_key}`);
         }
     } catch (error) {
-        console.error(error);
-        return c.json({text: error}, 500);
+        return c.redirect(
+            `/?message_err=${"授权失败，请检查: <br>" +
+            "1、应用ID和应用机密是否正确<br>" +
+            "2、登录账号是否具有应用权限<br>" +
+            "3、回调地址是否包括上面地址<br>" +
+            "错误信息: <br>" + error}`
+            + `&client_uid=${client_uid}`
+            + `&client_key=${client_key}`);
     }
 })
 
