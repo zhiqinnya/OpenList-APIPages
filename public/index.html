@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
 <head>
@@ -53,8 +54,45 @@
         a {
             text-decoration: none;
         }
-    </style>
+        
+        [data-theme="dark"] body {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
 
+        [data-theme="dark"] .form-control {
+            background-color: #2a2a3b;
+            color: #f0f0f0;
+            border-color: #444;
+        }
+
+        [data-theme="dark"] .form-control:read-only {
+            background-color: #2a2a3b;
+            color: #ccc;
+            border-color: #444;
+        }
+
+        [data-theme="dark"] .form-select {
+            background-color: #2a2a3b;
+            color: #f0f0f0;
+            border-color: #444;
+        }
+
+        [data-theme="dark"] .btn {
+            background-color: #00bfa5;
+            color: #ffffff;
+            border: none;
+        }
+
+        [data-theme="dark"] .btn:hover {
+            background-color: #00a58e;
+            color: #ffffff;
+        }
+        
+        [data-theme="dark"] p {
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
 <div class="toggle-theme">
@@ -105,7 +143,7 @@
         <div class="text-muted text-center">
             <p style="text-align:center">
                 本工具所有信息只以Cookie形式存储于浏览器本地<br>
-                开源于 <a href="https://github.com/OpenListTeam/cf-worker-api" target="_blank">GitHub</a> | by <a
+                开源于 <a href="https://github.com/OpenListTeam/cf-worker-api" target="_blank">GitHub</a> | By <a
                     href="https://github.com/OpenListTeam"
                     target="_blank">OpenListTeam</a>
             </p>
@@ -190,7 +228,6 @@
         const access_token = urlParams.get("access_token");
         const refresh_token = urlParams.get("refresh_token");
         const message_err = urlParams.get("message_err");
-        console.log(message_err);
         if (message_err && client_uid) {
             Swal.fire({
                 position: 'top',
