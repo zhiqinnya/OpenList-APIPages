@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
 <head>
@@ -54,7 +53,7 @@
         a {
             text-decoration: none;
         }
-        
+
         [data-theme="dark"] body {
             background-color: var(--bg-color-dark);
             color: var(--text-color-dark);
@@ -88,7 +87,7 @@
             background-color: #00a58e;
             color: #ffffff;
         }
-        
+
         [data-theme="dark"] p {
             color: #ffffff;
         }
@@ -107,6 +106,7 @@
             <option value="onedrive_cn">OneDrive 世纪互联</option>
             <option value="onedrive_us">OneDrive 美国版本</option>
             <option value="onedrive_de">OneDrive 德国版本</option>
+            <option value="alicloud_qr">阿里网盘 扫码登录</option>
         </select>
 
         <div class="mb-3">
@@ -169,7 +169,8 @@
             });
             return;
         }
-        let post_urls = "/onedrive/requests?client_uid=" + apps_uuid
+        let apps_subs = apps_type.split("_")[0]
+        let post_urls = "/" + apps_subs + "/requests?client_uid=" + apps_uuid
             + "&client_key=" + apps_keys + "&apps_type=" + apps_type;
         try {
             const response = await fetch(post_urls, {
@@ -178,7 +179,33 @@
             // 解析响应内容 ===============================================
             const response_data = await response.json();
             if (response.status === 200) {
-                window.location.href = response_data.text;
+                if (apps_subs === "onedrive") {
+                    window.location.href = response_data.text;
+                }
+                if (apps_type === "alicloud_qr") {
+                    let sid = response_data.sid;
+                    await Swal.fire({
+                        position: 'top',
+                        icon: 'info',
+                        title: '扫码登录',
+                        html: `<div>请扫码登录，完成后点确定</div>` +
+                            `<img src="${response_data.text}" alt="">`,
+                        showConfirmButton: true
+                    });
+                    post_urls = "/alicloud/callback" +
+                        "?client_id=" + apps_uuid +
+                        "&client_secret=" + apps_keys +
+                        "&grant_type=" + "authorization_code" +
+                        "&code=" + sid
+                    let auth_post = await fetch(post_urls, {method: 'GET'});
+                    let auth_data = await auth_post.json();
+                    if (auth_post.status === 200) {
+                        window.location.href = `/?access_token=${auth_data.access_token}`
+                            + `&refresh_token=${auth_data.refresh_token}`
+                            + `&client_uid=${apps_uuid}`
+                            + `&client_key=${apps_keys}`;
+                    }
+                }
             } else Swal.fire({
                 icon: 'error',
                 title: "获取秘钥失败: " + response_data.text,
