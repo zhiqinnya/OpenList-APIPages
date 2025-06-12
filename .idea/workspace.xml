@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="fin onedrive official token">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/cf-worker-api.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="deal merge issue">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/style-all.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/style-all.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wrangler.jsonc.example" beforeDir="false" afterPath="$PROJECT_DIR$/wrangler.jsonc" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +16,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -69,8 +66,41 @@
       <updated>1749696640494</updated>
       <workItem from="1749696641557" duration="119000" />
       <workItem from="1749696773818" duration="18000" />
-      <workItem from="1749696801474" duration="7490000" />
+      <workItem from="1749696801474" duration="15061000" />
     </task>
+    <task id="LOCAL-00001" summary="fin onedrive official token">
+      <option name="closed" value="true" />
+      <created>1749704488857</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749704488857</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add readme">
+      <option name="closed" value="true" />
+      <created>1749705341327</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1749705341327</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add onedrive area: cn us de">
+      <option name="closed" value="true" />
+      <created>1749712084921</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1749712084921</updated>
+    </task>
+    <task id="LOCAL-00004" summary="deal merge issue">
+      <option name="closed" value="true" />
+      <created>1749712420228</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1749712420228</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -78,6 +108,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fin onedrive official token" />
-    <option name="LAST_COMMIT_MESSAGE" value="fin onedrive official token" />
+    <MESSAGE value="add readme" />
+    <MESSAGE value="add onedrive area: cn us de" />
+    <MESSAGE value="deal merge issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="deal merge issue" />
   </component>
 </project>
