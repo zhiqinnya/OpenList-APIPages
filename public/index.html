@@ -102,12 +102,21 @@
     <div class="mb-3">
         <label for="site-select" class="form-label">网盘名称</label>
         <select id="site-select" class="form-select">
-            <option value="onedrive_go" selected>OneDrive 官方站点</option>
+            <!--            <option value="onedrive_pr" selected>OneDrive 个人账户</option>-->
+            <option value="onedrive_go">OneDrive 企业版本</option>
             <option value="onedrive_cn">OneDrive 世纪互联</option>
             <option value="onedrive_us">OneDrive 美国版本</option>
             <option value="onedrive_de">OneDrive 德国版本</option>
             <option value="alicloud_qr">阿里网盘 扫码登录</option>
+            <option value="baiduyun_go">百度网盘 验证登录</option>
+            <option value="115cloud_go">115 网盘 验证登录</option>
+            <option value="googleui_go">Google Drive Team</option>
         </select>
+
+        <div class="mb-3" style="margin-top: 15px">
+            <input type="checkbox" id="use-openlist-key" class="form-check-input">
+            <label for="use-openlist-key" class="form-check-label">使用 OpenList 提供的API</label>
+        </div>
 
         <div class="mb-3">
             <label for="client-id" class="form-label">客户端 ID</label>
@@ -117,6 +126,11 @@
         <div class="mb-3">
             <label for="app-secret" class="form-label">应用机密</label>
             <input type="text" id="app-secret" class="form-control">
+        </div>
+
+        <div class="mb-3" id="secret-key-view">
+            <label for="secret-key" class="form-label">访问密钥（SecretKey）</label>
+            <input type="text" id="secret-key" class="form-control">
         </div>
 
         <div class="mb-3">
@@ -159,6 +173,7 @@
         let apps_uuid = document.getElementById("client-id").value;
         let apps_keys = document.getElementById("app-secret").value;
         let apps_type = document.getElementById("site-select").value;
+        let secret_key = document.getElementById("secret-key").value;
         if (apps_uuid === "" || apps_keys === "") {
             Swal.fire({
                 position: 'top',
@@ -171,7 +186,8 @@
         }
         let apps_subs = apps_type.split("_")[0]
         let post_urls = "/" + apps_subs + "/requests?client_uid=" + apps_uuid
-            + "&client_key=" + apps_keys + "&apps_type=" + apps_type;
+            + "&client_key=" + apps_keys + "&apps_types=" + apps_type;
+        if (apps_subs === "baiduyun") post_urls += "&secret_key=" + secret_key
         try {
             const response = await fetch(post_urls, {
                 method: 'GET', headers: {'Content-Type': 'application/json'}
@@ -179,7 +195,8 @@
             // 解析响应内容 ===============================================
             const response_data = await response.json();
             if (response.status === 200) {
-                if (apps_subs === "onedrive") {
+                if (apps_subs === "onedrive" || apps_subs === "115cloud"
+                || apps_subs === "baiduyun") {
                     window.location.href = response_data.text;
                 }
                 if (apps_type === "alicloud_qr") {
@@ -251,11 +268,40 @@
         const strSearch = window.location.search;
         const urlParams = new URLSearchParams(strSearch);
         const client_uid = urlParams.get("client_uid");
+        const secret_key = urlParams.get("secret_key");
+        const driver_txt = urlParams.get("driver_txt");
         const client_key = urlParams.get("client_key");
         const access_token = urlParams.get("access_token");
         const refresh_token = urlParams.get("refresh_token");
         const message_err = urlParams.get("message_err");
-        if (message_err && client_uid) {
+        document.getElementById("site-select").value = driver_txt;
+        document.getElementById("app-secret").value = client_key;
+        document.getElementById("client-id").value = client_uid;
+        document.getElementById("access-token").value = access_token;
+        document.getElementById("refresh-token").value = refresh_token;
+        if(secret_key)
+            document.getElementById("secret-key").value = secret_key;
+        // 获取select元素和输入框元素
+        const siteSelect = document.getElementById('site-select');
+        const callbackUrlInput = document.getElementById('callback-url');
+
+        // 监听select的变化
+        siteSelect.addEventListener('change', function () {
+            const selectedValue = this.value.split("_")[0]; // 获取选中的value
+            // 更新输入框的值
+            callbackUrlInput.value = `https://api.oplist.org/${selectedValue}/callback`;
+            document.getElementById('secret-key-view').hidden = true;
+            if (siteSelect.value === "baiduyun_go") {
+                document.getElementById('secret-key-view').hidden = false;
+            }
+
+        });
+        // 页面加载时初始化回调地址
+        window.onload = function () {
+            siteSelect.dispatchEvent(new Event('change'));
+        };
+
+        if (message_err) {
             Swal.fire({
                 position: 'top',
                 icon: 'error',
@@ -264,13 +310,9 @@
                 showConfirmButton: true,
             });
         }
-        document.getElementById("client-id").value = client_uid;
-        document.getElementById("app-secret").value = client_key;
-        document.getElementById("access-token").value = access_token;
-        document.getElementById("refresh-token").value = refresh_token;
-    }
 
-    getToken();
+
+    }
 
     //手动切换主题模式
     function toggleTheme() {
@@ -285,6 +327,7 @@
         if (hour < 6 || hour >= 18) document.documentElement.setAttribute("data-theme", "dark");
         getToken();
     })();
+    getToken();
 </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
 
+
 const driver_map: Record<string, string[]> = {
     "onedrive_go": [
         'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
@@ -22,9 +23,11 @@ const driver_map: Record<string, string[]> = {
 
 // 登录申请 ##############################################################################
 export async function oneLogin(c: Context) {
-    const client_uid = <string>c.req.query('client_uid');
-    const client_key = <string>c.req.query('client_key');
-    const driver_txt = <string>c.req.query('apps_type');
+    const client_uid = c.req.query('client_uid');
+    const client_key = c.req.query('client_key');
+    const driver_txt = c.req.query('apps_types');
+    if (!driver_txt || !client_uid || !client_key)
+        return c.json({text: "参数缺少"}, 500);
     const scopes_all = 'offline_access Files.ReadWrite.All';
     const client_url: string = driver_map[driver_txt][0];
     // 请求参数 ==========================================================================
@@ -45,7 +48,7 @@ export async function oneLogin(c: Context) {
         });
         local.setCookie(c, 'client_uid', client_uid);
         local.setCookie(c, 'client_key', client_key);
-        local.setCookie(c, 'apps_types', driver_txt);
+        local.setCookie(c, 'driver_txt', driver_txt);
         return c.json({text: response.url}, 200);
     } catch (error) {
         return c.json({text: error}, 500);
@@ -59,7 +62,7 @@ export async function oneToken(c: Context) {
         login_data = <string>c.req.query('code');
         client_uid = <string>local.getCookie(c, 'client_uid')
         client_key = <string>local.getCookie(c, 'client_key')
-        driver_txt = <string>local.getCookie(c, 'apps_types')
+        driver_txt = <string>local.getCookie(c, 'driver_txt')
         client_url = driver_map[driver_txt][1];
         params_all = {
             client_id: client_uid,
@@ -76,7 +79,7 @@ export async function oneToken(c: Context) {
             "3、回调地址是否包括上面地址<br>" +
             "4、登录可能过期，请重新登录<br>" +
             "错误信息: <br> " + error}`
-            + `&client_uid=NULL`
+            + `&client_uid=`
             + `&client_key=`);
     }
     // console.log(login_data);
@@ -95,6 +98,7 @@ export async function oneToken(c: Context) {
         local.deleteCookie(c, 'client_uid');
         local.deleteCookie(c, 'client_key');
         local.deleteCookie(c, 'apps_types');
+        local.deleteCookie(c, 'driver_txt');
         if (!response.ok)
             return c.redirect(
                 `/?message_err=${"授权失败，请检查: <br>" +
@@ -110,7 +114,9 @@ export async function oneToken(c: Context) {
                 `/?access_token=${json.access_token}`
                 + `&refresh_token=${json.refresh_token}`
                 + `&client_uid=${client_uid}`
-                + `&client_key=${client_key}`);
+                + `&client_key=${client_key}`
+                + `&driver_txt=${driver_txt}`
+            );
         }
     } catch (error) {
         return c.redirect(
@@ -121,5 +127,31 @@ export async function oneToken(c: Context) {
             "错误信息: <br>" + error}`
             + `&client_uid=${client_uid}`
             + `&client_key=${client_key}`);
+    }
+}
+
+export async function spSiteID(c: Context) {
+    type Req = {
+        access_token: string;
+        site_url: string;
+        zone: string;
+    };
+    const req: Req = await c.req.json();
+
+    const u = new URL(req.site_url);
+    const siteName = u.pathname;
+
+    if (driver_map[req.zone]) {
+        const response = await fetch(`${driver_map[req.zone][1]}/v1.0/sites/root:/${siteName}`, {
+            headers: {'Authorization': `Bearer ${req.access_token}`}
+        });
+        if (!response.ok) {
+            return c.json({error: 'Failed to fetch site ID'}, 403);
+        }
+        const data: Record<string, any> = await response.json();
+        console.log(data);
+        return c.json(data);
+    } else {
+        return c.json({error: 'Zone does not exist'}, 400);
     }
 }

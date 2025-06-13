@@ -1,4 +1,5 @@
 import {Context} from "hono";
+import * as local from "hono/cookie";
 
 const driver_map = [
     'https://openapi.aliyundrive.com/oauth/authorize/qrcode',
@@ -29,9 +30,14 @@ interface AliQrcodeReq {
 // 登录申请 ##############################################################################
 export async function alyLogin(c: Context) {
     try {
+        const client_uid = c.req.query('client_uid');
+        const client_key = c.req.query('client_key');
+        const driver_txt = c.req.query('apps_types');
+        if (!driver_txt || !client_uid || !client_key)
+            return c.json({text: "参数缺少"}, 500);
         const req: AliQrcodeReq = {
-            client_id: <string>c.req.query('client_uid'),
-            client_secret: <string>c.req.query('client_key'),
+            client_id: client_uid,
+            client_secret: client_key,
             scopes: ['user:base', 'file:all:read', 'file:all:write']
         }
         const response = await fetch(driver_map[0], {
@@ -43,6 +49,7 @@ export async function alyLogin(c: Context) {
             const error: AliAccessTokenErr = await response.json();
             return c.json({text: `${error.code}: ${error.message}`}, 403);
         }
+        local.setCookie(c, 'driver_txt', driver_txt);
         const data: Record<string, any> = await response.json();
         console.log(data);
         return c.json({
@@ -79,6 +86,7 @@ export async function alyToken(c: Context) {
         }
         req.code = code_data.authCode;
     }
+    local.deleteCookie(c, 'driver_txt');
     try {
         const response = await fetch(driver_map[1], {
             method: 'POST',
