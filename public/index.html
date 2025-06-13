@@ -177,7 +177,8 @@
         let apps_keys = document.getElementById("app-secret").value;
         let apps_type = document.getElementById("site-select").value;
         let secret_key = document.getElementById("secret-key").value;
-        if (apps_uuid === "" || apps_keys === "") {
+        console.log(server_use);
+        if (server_use === "off" && (apps_uuid === "" || apps_keys === "")) {
             Swal.fire({
                 position: 'top',
                 icon: 'info',
@@ -316,13 +317,14 @@
             const appSecretInput = document.getElementById('app-secret');
             const secretKeyInput = document.getElementById('secret-key');
             const server_flag = document.getElementById('server_use');
-            if (siteSelect.value === "alicloud_qr" && server_flag.checked) {
+            if ((siteSelect.value === "alicloud_qr"
+            || siteSelect.value === "123cloud_go") && server_flag.checked) {
                 server_flag.checked = false;
                 Swal.fire({
                     position: 'top',
                     icon: 'error',
                     title: '暂不支持',
-                    html: "阿里云暂不支持",
+                    html: "阿里云和123云盘暂不支持使用官方密钥",
                     showConfirmButton: true,
                 });
                 return;

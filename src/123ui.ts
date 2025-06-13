@@ -10,16 +10,17 @@ const driver_map: string[] = [
 
 // 登录申请 ##############################################################################
 export async function oneLogin(c: Context) {
-    const client_uid = c.req.query('client_uid');
-    const client_key = c.req.query('client_key');
-    const driver_txt = c.req.query('apps_types');
-    if (!driver_txt || !client_uid || !client_key)
+    const client_uid: string = <string>c.req.query('client_uid');
+    const client_key: string = <string>c.req.query('client_key');
+    const driver_txt: string = <string>c.req.query('apps_types');
+    const server_use: string = <string>c.req.query('server_use');
+    console.log(server_use);
+    if (server_use == "off" && (!driver_txt || !client_uid || !client_key))
         return c.json({text: "参数缺少"}, 500);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
         client_id: client_uid,
         clientSecret: client_key,
-
     };
     // 执行请求 ===========================================================================
     try {
@@ -32,8 +33,8 @@ export async function oneLogin(c: Context) {
             },
         });
         const json: Record<string, any> = await response.json();
-        local.setCookie(c, 'client_uid', client_uid);
-        local.setCookie(c, 'client_key', client_key);
+        // local.setCookie(c, 'client_uid', client_uid);
+        // local.setCookie(c, 'client_key', client_key);
         local.setCookie(c, 'driver_txt', driver_txt);
         console.log(json);
         return c.json({text: json.data.accessToken}, 200);

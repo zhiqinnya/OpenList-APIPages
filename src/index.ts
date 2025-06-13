@@ -9,8 +9,14 @@ import * as ui115 from './115ui';
 import * as ui123 from './123ui';
 import * as baidu from './baidu';
 import * as goapi from './goapi';
+
 export type Bindings = {
-    MAIN_URLS: string
+    MAIN_URLS: string,
+    onedrive_uid: string, onedrive_key: string,
+    alicloud_uid: string, alicloud_key: string,
+    baiduyun_uid: string, baiduyun_key: string,
+    cloud115_uid: string, cloud115_key: string,
+    googleui_uid: string, googleui_key: string,
 }
 const app = new Hono<{ Bindings: Bindings }>()
 app.use("*", serveStatic({manifest: manifest, root: "./"}));

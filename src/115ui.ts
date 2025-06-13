@@ -10,15 +10,16 @@ const driver_map: string[] = [
 
 // 登录申请 ##############################################################################
 export async function oneLogin(c: Context) {
-    const client_uid = c.req.query('client_uid');
-    const client_key = c.req.query('client_key');
-    const driver_txt = c.req.query('apps_types');
-    if(!driver_txt||!client_uid||!client_key)
+    const client_uid: string = <string>c.req.query('client_uid');
+    const client_key: string = <string>c.req.query('client_key');
+    const driver_txt: string = <string>c.req.query('apps_types');
+    const server_use: string = <string>c.req.query('server_use');
+    if (server_use == "off" && (!driver_txt || !client_uid || !client_key))
         return c.json({text: "参数缺少"}, 500);
     const random_key = getRandomString(64);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        client_id: client_uid,
+        client_id: server_use == "on" ? c.env.cloud115_uid : client_uid,
         state: random_key,
         response_type: 'code',
         redirect_uri: 'https://' + c.env.MAIN_URLS + '/115cloud/callback'
@@ -30,10 +31,13 @@ export async function oneLogin(c: Context) {
     // 执行请求 ===========================================================================
     try {
         const response = await fetch(urlWithParams.href, {method: 'GET',});
-        local.setCookie(c, 'client_uid', client_uid);
-        local.setCookie(c, 'client_key', client_key);
+        if (server_use !== "on") {
+            local.setCookie(c, 'client_uid', client_uid);
+            local.setCookie(c, 'client_key', client_key);
+        }
         local.setCookie(c, 'driver_txt', driver_txt);
         local.setCookie(c, 'random_key', random_key);
+        local.setCookie(c, 'server_use', server_use);
         console.log(response);
         return c.json({text: response.url}, 200);
     } catch (error) {
@@ -43,21 +47,27 @@ export async function oneLogin(c: Context) {
 
 // 令牌申请 ##############################################################################
 export async function oneToken(c: Context) {
-    let login_data, client_uid, client_key, random_key, client_url, params_all, random_uid, driver_txt;
+    let login_data, client_uid, client_key, random_key, client_url;
+    let server_use, params_all, random_uid, driver_txt;
     try { // 请求参数 ====================================================================
         login_data = c.req.query('code');
         random_uid = c.req.query('state');
-        client_uid = local.getCookie(c, 'client_uid')
-        client_key = local.getCookie(c, 'client_key')
+        server_use = local.getCookie(c, 'server_use')
         random_key = local.getCookie(c, 'random_key')
         driver_txt = local.getCookie(c, 'driver_txt')
+        if (server_use !== "on") {
+            client_uid = local.getCookie(c, 'client_uid')
+            client_key = local.getCookie(c, 'client_key')
+        }
+
+
         if (!random_uid || !random_key || random_uid !== random_key
             || !driver_txt || !login_data || !client_uid || !client_key)
             return c.redirect(showErr("Cookie无效", "", ""));
         client_url = driver_map[1];
         params_all = {
-            client_id: client_uid,
-            client_secret: client_key,
+            client_id: server_use == "on" ? c.env.cloud115_uid : client_uid,
+            client_secret: server_use == "on" ? c.env.cloud115_uid : client_key,
             redirect_uri: 'https://' + c.env.MAIN_URLS + '/115cloud/callback',
             code: login_data,
             grant_type: 'authorization_code'
@@ -76,17 +86,20 @@ export async function oneToken(c: Context) {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-        local.deleteCookie(c, 'client_uid');
-        local.deleteCookie(c, 'client_key');
+        if (server_use !== "on") {
+            local.deleteCookie(c, 'client_uid');
+            local.deleteCookie(c, 'client_key');
+        }
         local.deleteCookie(c, 'random_key');
         local.deleteCookie(c, 'driver_txt');
+        local.deleteCookie(c, 'server_use');
         let json: Record<string, any> = await response.json();
         if (json.state == 1) {
             return c.redirect(
                 `/?access_token=${json.data.access_token}`
                 + `&refresh_token=${json.data.refresh_token}`
-                + `&client_uid=${client_uid}`
-                + `&client_key=${client_key}`
+                + `&client_uid=${server_use == "on" ? "" : client_uid}`
+                + `&client_key=${server_use == "on" ? "" : client_key}`
                 + `&driver_txt=${driver_txt}`
             );
         }
