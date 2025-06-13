@@ -10,11 +10,11 @@ const driver_map: Record<string, string[]> = {
     ],
     "onedrive_cn": [
         'https://login.chinacloudapi.cn/common/oauth2/v2.0/authorize',
-        'https://microsoftgraph.chinacloudapi.cn/common/oauth2/v2.0/token'
+        'https://login.chinacloudapi.cn/common/oauth2/token'
     ],
     "onedrive_de": [
         'https://login.microsoftonline.de/common/oauth2/v2.0/authorize',
-        '\'https://login.chinacloudapi.cn/common/oauth2/token'
+        'https://graph.microsoft.de/common/oauth2/v2.0/token'
     ],
     "onedrive_us": [
         'https://login.microsoftonline.us/common/oauth2/v2.0/authorize',

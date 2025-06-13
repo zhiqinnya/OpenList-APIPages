@@ -33,8 +33,6 @@ export async function oneLogin(c: Context) {
             },
         });
         const json: Record<string, any> = await response.json();
-        // local.setCookie(c, 'client_uid', client_uid);
-        // local.setCookie(c, 'client_key', client_key);
         local.setCookie(c, 'driver_txt', driver_txt);
         console.log(json);
         return c.json({text: json.data.accessToken}, 200);

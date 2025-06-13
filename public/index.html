@@ -177,7 +177,7 @@
         let apps_keys = document.getElementById("app-secret").value;
         let apps_type = document.getElementById("site-select").value;
         let secret_key = document.getElementById("secret-key").value;
-        console.log( server_use);
+        console.log(server_use);
         if (!server_use && (apps_uuid === "" || apps_keys === "")) {
             Swal.fire({
                 position: 'top',
@@ -203,10 +203,6 @@
                 if (apps_subs === "onedrive" || apps_subs === "115cloud"
                     || apps_subs === "baiduyun" || apps_subs === "googleui") {
                     window.location.href = response_data.text;
-                }
-                if (apps_subs === "123cloud") {
-                    google(apps_uuid, apps_keys);
-                    return;
                 }
                 if (apps_subs === "123cloud") {
                     document.getElementById("access-token").value = response_data.text;
@@ -318,13 +314,17 @@
             const secretKeyInput = document.getElementById('secret-key');
             const server_flag = document.getElementById('server_use');
             if ((siteSelect.value === "alicloud_qr"
-            || siteSelect.value === "123cloud_go") && server_flag.checked) {
+                || siteSelect.value === "123cloud_go"
+                || siteSelect.value === "onedrive_cn"
+                || siteSelect.value === "onedrive_us"
+                || siteSelect.value === "onedrive_de"
+            ) && server_flag.checked) {
                 server_flag.checked = false;
                 Swal.fire({
                     position: 'top',
                     icon: 'error',
                     title: '暂不支持',
-                    html: "阿里云和123云盘暂不支持使用官方密钥",
+                    html: "阿里云、123云盘、OneDrive非官方区域暂不支持使用官方密钥",
                     showConfirmButton: true,
                 });
                 return;
