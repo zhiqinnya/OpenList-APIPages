@@ -4,8 +4,8 @@ import {showErr} from "./error";
 
 
 const driver_map: string[] = [
-    "https://passportapi.115.com/open/authorize",
-    "https://passportapi.115.com/open/authCodeToToken"
+    "https://accounts.google.com/o/oauth2/v2/auth",
+    "https://oauth2.googleapis.com/token"
 ]
 
 // 登录申请 ##############################################################################
@@ -15,27 +15,28 @@ export async function oneLogin(c: Context) {
     const driver_txt = c.req.query('apps_types');
     if (!driver_txt || !client_uid || !client_key)
         return c.json({text: "参数缺少"}, 500);
-    const random_key = getRandomString(64);
+    const random_key = getRandomString(32);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        client_id: client_uid,
-        state: random_key,
-        response_type: 'code',
-        redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback'
+        'client_id': client_uid,
+        'redirect_uri': 'https://' + c.env.MAIN_URLS + '/googleui/callback',
+        'scope': "https://www.googleapis.com/auth/drive",
+        'response_type': 'code',
+        'state': random_key,
+        'access_type': 'offline',
+        'prompt': 'consent'
     };
+    local.setCookie(c, 'client_uid', client_uid);
+    local.setCookie(c, 'client_key', client_key);
+    local.setCookie(c, 'driver_txt', driver_txt);
+    local.setCookie(c, 'random_key', random_key);
     const urlWithParams = new URL(driver_map[0]);
     Object.keys(params_all).forEach(key => {
         urlWithParams.searchParams.append(key, params_all[key]);
     });
     // 执行请求 ===========================================================================
     try {
-        const response = await fetch(urlWithParams.href, {method: 'GET',});
-        local.setCookie(c, 'client_uid', client_uid);
-        local.setCookie(c, 'client_key', client_key);
-        local.setCookie(c, 'driver_txt', driver_txt);
-        local.setCookie(c, 'random_key', random_key);
-        console.log(response);
-        return c.json({text: response.url}, 200);
+        return c.json({text: urlWithParams}, 200);
     } catch (error) {
         return c.json({text: error}, 500);
     }
@@ -44,7 +45,7 @@ export async function oneLogin(c: Context) {
 // 令牌申请 ##############################################################################
 export async function oneToken(c: Context) {
     let login_data, client_uid, client_key, random_key;
-    let driver_txt, client_url, params_all, random_uid;
+    let driver_txt, params_all, random_uid;
     try { // 请求参数 ====================================================================
         login_data = <string>c.req.query('code');
         random_uid = <string>c.req.query('state');
@@ -52,39 +53,37 @@ export async function oneToken(c: Context) {
         client_key = <string>local.getCookie(c, 'client_key')
         random_key = <string>local.getCookie(c, 'random_key')
         driver_txt = local.getCookie(c, 'driver_txt')
+        // console.log(login_data, random_uid, client_uid, client_key, random_key, driver_txt)
         if (!client_uid || !client_key || random_uid !== random_key || !client_uid || !client_key)
             return c.redirect(showErr("Cookie无效", "", ""));
-        client_url = driver_map[1];
         params_all = {
-            client_id: client_uid,
-            client_secret: client_key,
-            redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback',
-            code: login_data,
-            grant_type: 'authorization_code'
+            'client_id': client_uid,
+            'client_secret': client_key,
+            'code': login_data,
+            'grant_type': 'authorization_code',
+            'redirect_uri': 'https://' + c.env.MAIN_URLS + '/googleui/callback',
         };
     } catch (error) {
         return c.redirect(showErr(<string>error, "", ""));
     }
-    // console.log(login_data);
-
+    console.log(params_all);
     // 执行请求 ===========================================================================
     try {
         const paramsString = new URLSearchParams(params_all).toString();
-        const response: Response = await fetch(client_url, {
+        const response: Response = await fetch(driver_map[1], {
             method: 'POST', body: paramsString,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded',},
         });
         local.deleteCookie(c, 'client_uid');
         local.deleteCookie(c, 'client_key');
         local.deleteCookie(c, 'random_key');
         local.deleteCookie(c, 'driver_txt');
         let json: Record<string, any> = await response.json();
-        if (json.state == 1) {
+        console.log(json);
+        if (json.token_type == "Bearer") {
             return c.redirect(
-                `/?access_token=${json.data.access_token}`
-                + `&refresh_token=${json.data.refresh_token}`
+                `/?access_token=${json.access_token}`
+                + `&refresh_token=${json.refresh_token}`
                 + `&client_uid=${client_uid}`
                 + `&client_key=${client_key}`
                 + `&driver_txt=${driver_txt}`

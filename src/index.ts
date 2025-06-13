@@ -6,6 +6,7 @@ import * as local from "hono/cookie";
 import * as oneui from './oneui';
 import * as aliui from './aliui';
 import * as ui115 from './115ui';
+import * as ui123 from './123ui';
 import * as baidu from './baidu';
 import * as goapi from './goapi';
 export type Bindings = {
@@ -51,6 +52,16 @@ app.get('/115cloud/requests', async (c: Context) => {
 // 令牌申请 ##############################################################################
 app.get('/115cloud/callback', async (c: Context) => {
     return ui115.oneToken(c);
+});
+
+// 登录申请 ##############################################################################
+app.get('/123cloud/requests', async (c: Context) => {
+    return ui123.oneLogin(c);
+});
+
+// 令牌申请 ##############################################################################
+app.get('/123cloud/callback', async (c: Context) => {
+    return ui123.oneToken(c);
 });
 
 // 登录申请 ##############################################################################

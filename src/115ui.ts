@@ -21,7 +21,7 @@ export async function oneLogin(c: Context) {
         client_id: client_uid,
         state: random_key,
         response_type: 'code',
-        redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback'
+        redirect_uri: 'https://' + c.env.MAIN_URLS + '/115cloud/callback'
     };
     const urlWithParams = new URL(driver_map[0]);
     Object.keys(params_all).forEach(key => {
@@ -58,7 +58,7 @@ export async function oneToken(c: Context) {
         params_all = {
             client_id: client_uid,
             client_secret: client_key,
-            redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback',
+            redirect_uri: 'https://' + c.env.MAIN_URLS + '/115cloud/callback',
             code: login_data,
             grant_type: 'authorization_code'
         };

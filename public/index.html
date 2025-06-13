@@ -103,66 +103,68 @@
         <label for="site-select" class="form-label">网盘名称</label>
         <select id="site-select" class="form-select">
             <!--            <option value="onedrive_pr" selected>OneDrive 个人账户</option>-->
-            <option value="onedrive_go">OneDrive 企业版本</option>
+            <option value="onedrive_go" selected>OneDrive 企业版本</option>
             <option value="onedrive_cn">OneDrive 世纪互联</option>
             <option value="onedrive_us">OneDrive 美国版本</option>
             <option value="onedrive_de">OneDrive 德国版本</option>
             <option value="alicloud_qr">阿里网盘 扫码登录</option>
             <option value="baiduyun_go">百度网盘 验证登录</option>
             <option value="115cloud_go">115 网盘 验证登录</option>
+            <option value="123cloud_go">123 网盘 直接登录</option>
             <option value="googleui_go">Google Drive Team</option>
         </select>
-
-        <div class="mb-3" style="margin-top: 15px">
-            <input type="checkbox" id="use-openlist-key" class="form-check-input">
-            <label for="use-openlist-key" class="form-check-label">使用 OpenList 提供的API</label>
-        </div>
-
-        <div class="mb-3">
-            <label for="client-id" class="form-label">客户端 ID</label>
-            <input type="text" id="client-id" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label for="app-secret" class="form-label">应用机密</label>
-            <input type="text" id="app-secret" class="form-control">
-        </div>
-
-        <div class="mb-3" id="secret-key-view">
-            <label for="secret-key" class="form-label">访问密钥（SecretKey）</label>
-            <input type="text" id="secret-key" class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label for="callback-url" class="form-label">回调地址</label>
-            <input type="text" id="callback-url" class="form-control" value="https://api.oplist.org/onedrive/callback"
-                   readonly
-                   onclick="autoCopy(this)">
-        </div>
-
-        <div class="d-grid gap-2 mb-3">
-            <button class="btn btn-primary" onclick="getLogin()">获取 Token</button>
-        </div>
-
-        <div class="mb-3">
-            <label for="access-token" class="form-label">访问秘钥</label>
-            <textarea id="access-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="refresh-token" class="form-label">刷新秘钥</label>
-            <textarea id="refresh-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
-        </div>
-
-        <div class="text-muted text-center">
-            <p style="text-align:center">
-                本工具所有信息只以Cookie形式存储于浏览器本地<br>
-                开源于 <a href="https://github.com/OpenListTeam/cf-worker-api" target="_blank">GitHub</a> | By <a
-                    href="https://github.com/OpenListTeam"
-                    target="_blank">OpenListTeam</a>
-            </p>
-        </div>
     </div>
+
+    <div class="mb-3" style="margin-top: 15px">
+        <input type="checkbox" id="server_use" class="form-check-input">
+        <label for="server_use" class="form-check-label">使用 OpenList 提供的API</label>
+    </div>
+
+    <div class="mb-3">
+        <label for="client-id" class="form-label">客户端ID</label>
+        <input type="text" id="client-id" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="app-secret" class="form-label">应用机密</label>
+        <input type="text" id="app-secret" class="form-control">
+    </div>
+
+    <div class="mb-3" id="secret-key-view">
+        <label for="secret-key" class="form-label">访问密钥（SecretKey）</label>
+        <input type="text" id="secret-key" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="callback-url" class="form-label">回调地址</label>
+        <input type="text" id="callback-url" class="form-control" value="https://api.oplist.org/onedrive/callback"
+               readonly
+               onclick="autoCopy(this)">
+    </div>
+
+    <div class="d-grid gap-2 mb-3">
+        <button class="btn btn-primary" onclick="getLogin()">获取 Token</button>
+    </div>
+
+    <div class="mb-3">
+        <label for="access-token" class="form-label">访问秘钥</label>
+        <textarea id="access-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="refresh-token" class="form-label">刷新秘钥</label>
+        <textarea id="refresh-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
+    </div>
+
+    <div class="text-muted text-center">
+        <p style="text-align:center">
+            本工具所有信息只以Cookie形式存储于浏览器本地<br>
+            开源于 <a href="https://github.com/OpenListTeam/cf-worker-api" target="_blank">GitHub</a> | By <a
+                href="https://github.com/OpenListTeam"
+                target="_blank">OpenListTeam</a>
+        </p>
+    </div>
+</div>
 </div>
 
 <script>
@@ -170,6 +172,7 @@
 
     // 获取登录秘钥 #######################################################
     async function getLogin() {
+        let server_use = document.getElementById("server_use").value;
         let apps_uuid = document.getElementById("client-id").value;
         let apps_keys = document.getElementById("app-secret").value;
         let apps_type = document.getElementById("site-select").value;
@@ -186,7 +189,8 @@
         }
         let apps_subs = apps_type.split("_")[0]
         let post_urls = "/" + apps_subs + "/requests?client_uid=" + apps_uuid
-            + "&client_key=" + apps_keys + "&apps_types=" + apps_type;
+            + "&client_key=" + apps_keys + "&apps_types=" + apps_type
+            + "&server_use=" + server_use
         if (apps_subs === "baiduyun") post_urls += "&secret_key=" + secret_key
         try {
             const response = await fetch(post_urls, {
@@ -196,8 +200,16 @@
             const response_data = await response.json();
             if (response.status === 200) {
                 if (apps_subs === "onedrive" || apps_subs === "115cloud"
-                || apps_subs === "baiduyun") {
+                    || apps_subs === "baiduyun" || apps_subs === "googleui") {
                     window.location.href = response_data.text;
+                }
+                if (apps_subs === "123cloud") {
+                    google(apps_uuid, apps_keys);
+                    return;
+                }
+                if (apps_subs === "123cloud") {
+                    document.getElementById("access-token").value = response_data.text;
+                    return;
                 }
                 if (apps_type === "alicloud_qr") {
                     let sid = response_data.sid;
@@ -267,6 +279,7 @@
     async function getToken() {
         const strSearch = window.location.search;
         const urlParams = new URLSearchParams(strSearch);
+        const server_use = urlParams.get("server_use");
         const client_uid = urlParams.get("client_uid");
         const secret_key = urlParams.get("secret_key");
         const driver_txt = urlParams.get("driver_txt");
@@ -275,11 +288,13 @@
         const refresh_token = urlParams.get("refresh_token");
         const message_err = urlParams.get("message_err");
         document.getElementById("site-select").value = driver_txt;
+        if (!driver_txt || driver_txt === "")
+            document.getElementById("site-select").value = "onedrive_go";
         document.getElementById("app-secret").value = client_key;
         document.getElementById("client-id").value = client_uid;
         document.getElementById("access-token").value = access_token;
         document.getElementById("refresh-token").value = refresh_token;
-        if(secret_key)
+        if (secret_key)
             document.getElementById("secret-key").value = secret_key;
         // 获取select元素和输入框元素
         const siteSelect = document.getElementById('site-select');
@@ -296,9 +311,41 @@
             }
 
         });
+        document.getElementById('server_use').addEventListener('change', function () {
+            const clientIdInput = document.getElementById('client-id');
+            const appSecretInput = document.getElementById('app-secret');
+            const secretKeyInput = document.getElementById('secret-key');
+            const server_flag = document.getElementById('server_use');
+            if (siteSelect.value === "alicloud_qr" && server_flag.checked) {
+                server_flag.checked = false;
+                Swal.fire({
+                    position: 'top',
+                    icon: 'error',
+                    title: '暂不支持',
+                    html: "阿里云暂不支持",
+                    showConfirmButton: true,
+                });
+                return;
+            }
+            if (this.checked) {
+                // 禁用输入框并清空内容
+                clientIdInput.disabled = true;
+                clientIdInput.value = '';
+                appSecretInput.disabled = true;
+                appSecretInput.value = '';
+                secretKeyInput.disabled = true;
+                secretKeyInput.value = '';
+            } else {
+                // 启用输入框
+                clientIdInput.disabled = false;
+                appSecretInput.disabled = false;
+                secretKeyInput.disabled = false;
+            }
+        });
         // 页面加载时初始化回调地址
         window.onload = function () {
             siteSelect.dispatchEvent(new Event('change'));
+
         };
 
         if (message_err) {
@@ -310,8 +357,6 @@
                 showConfirmButton: true,
             });
         }
-
-
     }
 
     //手动切换主题模式
@@ -327,6 +372,7 @@
         if (hour < 6 || hour >= 18) document.documentElement.setAttribute("data-theme", "dark");
         getToken();
     })();
+
     getToken();
 </script>
 </body>
