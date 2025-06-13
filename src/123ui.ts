@@ -15,7 +15,7 @@ export async function oneLogin(c: Context) {
     const driver_txt: string = <string>c.req.query('apps_types');
     const server_use: string = <string>c.req.query('server_use');
     console.log(server_use);
-    if (server_use == "off" && (!driver_txt || !client_uid || !client_key))
+    if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
         return c.json({text: "参数缺少"}, 500);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {

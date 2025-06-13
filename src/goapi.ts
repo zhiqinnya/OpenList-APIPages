@@ -14,12 +14,12 @@ export async function oneLogin(c: Context) {
     const client_key: string = <string>c.req.query('client_key');
     const driver_txt: string = <string>c.req.query('apps_types');
     const server_use: string = <string>c.req.query('server_use');
-    if (server_use == "off" && (!driver_txt || !client_uid || !client_key))
+    if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
         return c.json({text: "参数缺少"}, 500);
     const random_key = getRandomString(32);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        'client_id': server_use == "on" ? c.env.onedrive_uid : client_uid,
+        'client_id': server_use == "true" ? c.env.googleui_uid : client_uid,
         'redirect_uri': 'https://' + c.env.MAIN_URLS + '/googleui/callback',
         'scope': "https://www.googleapis.com/auth/drive",
         'response_type': 'code',
@@ -27,7 +27,7 @@ export async function oneLogin(c: Context) {
         'access_type': 'offline',
         'prompt': 'consent'
     };
-    if (server_use !== "on") {
+    if (server_use == "false") {
         local.setCookie(c, 'client_uid', client_uid);
         local.setCookie(c, 'client_key', client_key);
     }
@@ -56,18 +56,19 @@ export async function oneToken(c: Context) {
         server_use = local.getCookie(c, 'server_use')
         driver_txt = <string>local.getCookie(c, 'driver_txt')
         client_uid = client_key = ""
-        if (server_use !== "on") {
+        if (server_use == "false") {
             client_uid = <string>local.getCookie(c, 'client_uid')
             client_key = <string>local.getCookie(c, 'client_key')
+            if (!client_uid || !client_key || random_uid !== random_key || !client_uid || !client_key)
+                return c.redirect(showErr("Cookie无效", "", ""));
         }
         random_key = <string>local.getCookie(c, 'random_key')
         driver_txt = local.getCookie(c, 'driver_txt')
         // console.log(login_data, random_uid, client_uid, client_key, random_key, driver_txt)
-        if (!client_uid || !client_key || random_uid !== random_key || !client_uid || !client_key)
-            return c.redirect(showErr("Cookie无效", "", ""));
+
         params_all = {
-            'client_id': server_use == "on" ? c.env.googleui_uid : client_uid,
-            'client_secret': server_use == "on" ? c.env.googleui_key : client_key,
+            'client_id': server_use == "true" ? c.env.googleui_uid : client_uid,
+            'client_secret': server_use == "true" ? c.env.googleui_key : client_key,
             'code': login_data,
             'grant_type': 'authorization_code',
             'redirect_uri': 'https://' + c.env.MAIN_URLS + '/googleui/callback',
@@ -83,7 +84,7 @@ export async function oneToken(c: Context) {
             method: 'POST', body: paramsString,
             headers: {'Content-Type': 'application/x-www-form-urlencoded',},
         });
-        if (server_use !== "on") {
+        if (server_use == "false") {
             local.deleteCookie(c, 'client_uid');
             local.deleteCookie(c, 'client_key');
         }
@@ -96,8 +97,8 @@ export async function oneToken(c: Context) {
             return c.redirect(
                 `/?access_token=${json.access_token}`
                 + `&refresh_token=${json.refresh_token}`
-                + `&client_uid=${server_use == "on" ? "" : client_uid}`
-                + `&client_key=${server_use == "on" ? "" : client_key}`
+                + `&client_uid=${server_use == "true" ? "" : client_uid}`
+                + `&client_key=${server_use == "true" ? "" : client_key}`
                 + `&driver_txt=${driver_txt}`
             );
         }

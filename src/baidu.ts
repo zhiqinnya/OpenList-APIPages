@@ -15,12 +15,12 @@ export async function oneLogin(c: Context) {
     const secret_key: string = <string>c.req.query('secret_key');
     const driver_txt: string = <string>c.req.query('apps_types');
     const server_use: string = <string>c.req.query('server_use');
-    if (server_use == "off" && (!driver_txt || !client_uid || !client_key || !secret_key))
+    if (server_use == "false" && (!driver_txt || !client_uid || !client_key || !secret_key))
         return c.json({text: "参数缺少"}, 500);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        client_id: server_use == "on" ? c.env.baiduyun_key : client_key,
-        device_id: server_use == "on" ? c.env.baiduyun_uid : client_uid,
+        client_id: server_use == "true" ? c.env.baiduyun_key : client_key,
+        device_id: server_use == "true" ? c.env.baiduyun_uid : client_uid,
         scope: "basic,netdisk",
         response_type: 'code',
         redirect_uri: 'https://' + c.env.MAIN_URLS + '/baiduyun/callback'
@@ -34,7 +34,7 @@ export async function oneLogin(c: Context) {
         const response = await fetch(urlWithParams.href, {
             method: 'GET',
         });
-        if (server_use !== "on") {
+        if (server_use == "false") {
             local.setCookie(c, 'client_uid', client_uid);
             local.setCookie(c, 'client_key', client_key);
             local.setCookie(c, 'secret_key', secret_key);
@@ -57,17 +57,18 @@ export async function oneToken(c: Context) {
         server_use = local.getCookie(c, 'server_use')
         driver_txt = local.getCookie(c, 'driver_txt')
         client_uid = client_key = secret_key = ""
-        if (server_use !== "on") {
+        if (server_use == "false") {
             client_uid = local.getCookie(c, 'client_uid')
             client_key = local.getCookie(c, 'client_key')
             secret_key = local.getCookie(c, 'secret_key')
+            if (!login_data || !client_uid || !client_key || !secret_key)
+                return c.redirect(showErr("Cookie缺少", "", ""));
         }
-        if (!login_data || !client_uid || !client_key || !secret_key)
-            return c.redirect(showErr("Cookie缺少", "", ""));
+
         client_url = driver_map[1];
         params_all = {
-            client_id: server_use == "on" ? c.env.baiduyun_key : client_key,
-            client_secret: server_use == "on" ? c.env.baiduyun_ext : secret_key,
+            client_id: server_use == "true" ? c.env.baiduyun_key : client_key,
+            client_secret: server_use == "true" ? c.env.baiduyun_ext : secret_key,
             code: login_data,
             grant_type: 'authorization_code',
             redirect_uri: 'https://' + c.env.MAIN_URLS + '/baiduyun/callback'
@@ -85,7 +86,7 @@ export async function oneToken(c: Context) {
             urlWithParams.searchParams.append(key, params_all[key]);
         });
         const response: Response = await fetch(urlWithParams, {method: 'GET'});
-        if (server_use !== "on") {
+        if (server_use == "false") {
             local.deleteCookie(c, 'client_uid');
             local.deleteCookie(c, 'client_key');
             local.deleteCookie(c, 'secret_key');
@@ -93,14 +94,14 @@ export async function oneToken(c: Context) {
         local.deleteCookie(c, 'driver_txt');
         local.deleteCookie(c, 'server_use');
         const json: Record<string, any> = await response.json();
-        // console.log(response, json);
+        console.log(response, json);
         if (response.ok) {
             return c.redirect(
                 `/?access_token=${json.access_token}`
                 + `&refresh_token=${json.refresh_token}`
                 + `&client_uid=${client_uid}`
-                + `&client_key=${server_use == "on" ? "" : client_key}`
-                + `&secret_key=${server_use == "on" ? "" : secret_key}`
+                + `&client_key=${server_use == "true" ? "" : client_key}`
+                + `&secret_key=${server_use == "true" ? "" : secret_key}`
                 + `&driver_txt=${driver_txt}`
             );
         }

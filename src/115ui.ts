@@ -14,12 +14,13 @@ export async function oneLogin(c: Context) {
     const client_key: string = <string>c.req.query('client_key');
     const driver_txt: string = <string>c.req.query('apps_types');
     const server_use: string = <string>c.req.query('server_use');
-    if (server_use == "off" && (!driver_txt || !client_uid || !client_key))
+    if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
         return c.json({text: "参数缺少"}, 500);
     const random_key = getRandomString(64);
+    console.log(server_use);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        client_id: server_use == "on" ? c.env.cloud115_uid : client_uid,
+        client_id: server_use == "true" ? c.env.cloud115_uid : client_uid,
         state: random_key,
         response_type: 'code',
         redirect_uri: 'https://' + c.env.MAIN_URLS + '/115cloud/callback'
@@ -31,7 +32,7 @@ export async function oneLogin(c: Context) {
     // 执行请求 ===========================================================================
     try {
         const response = await fetch(urlWithParams.href, {method: 'GET',});
-        if (server_use !== "on") {
+        if (server_use == "false") {
             local.setCookie(c, 'client_uid', client_uid);
             local.setCookie(c, 'client_key', client_key);
         }
@@ -55,19 +56,18 @@ export async function oneToken(c: Context) {
         server_use = local.getCookie(c, 'server_use')
         random_key = local.getCookie(c, 'random_key')
         driver_txt = local.getCookie(c, 'driver_txt')
-        if (server_use !== "on") {
+        if (server_use == "false") {
             client_uid = local.getCookie(c, 'client_uid')
             client_key = local.getCookie(c, 'client_key')
+            if (!random_uid || !random_key || random_uid !== random_key
+                || !driver_txt || !login_data || !client_uid || !client_key)
+                return c.redirect(showErr("Cookie无效", "", ""));
         }
 
-
-        if (!random_uid || !random_key || random_uid !== random_key
-            || !driver_txt || !login_data || !client_uid || !client_key)
-            return c.redirect(showErr("Cookie无效", "", ""));
         client_url = driver_map[1];
         params_all = {
-            client_id: server_use == "on" ? c.env.cloud115_uid : client_uid,
-            client_secret: server_use == "on" ? c.env.cloud115_uid : client_key,
+            client_id: server_use == "true" ? c.env.cloud115_uid : client_uid,
+            client_secret: server_use == "true" ? c.env.cloud115_key : client_key,
             redirect_uri: 'https://' + c.env.MAIN_URLS + '/115cloud/callback',
             code: login_data,
             grant_type: 'authorization_code'
@@ -86,7 +86,7 @@ export async function oneToken(c: Context) {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-        if (server_use !== "on") {
+        if (server_use == "false") {
             local.deleteCookie(c, 'client_uid');
             local.deleteCookie(c, 'client_key');
         }
@@ -98,8 +98,8 @@ export async function oneToken(c: Context) {
             return c.redirect(
                 `/?access_token=${json.data.access_token}`
                 + `&refresh_token=${json.data.refresh_token}`
-                + `&client_uid=${server_use == "on" ? "" : client_uid}`
-                + `&client_key=${server_use == "on" ? "" : client_key}`
+                + `&client_uid=${server_use == "true" ? "" : client_uid}`
+                + `&client_key=${server_use == "true" ? "" : client_key}`
                 + `&driver_txt=${driver_txt}`
             );
         }

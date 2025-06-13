@@ -172,13 +172,13 @@
 
     // 获取登录秘钥 #######################################################
     async function getLogin() {
-        let server_use = document.getElementById("server_use").value;
+        let server_use = document.getElementById("server_use").checked;
         let apps_uuid = document.getElementById("client-id").value;
         let apps_keys = document.getElementById("app-secret").value;
         let apps_type = document.getElementById("site-select").value;
         let secret_key = document.getElementById("secret-key").value;
-        console.log(server_use);
-        if (server_use === "off" && (apps_uuid === "" || apps_keys === "")) {
+        console.log( server_use);
+        if (!server_use && (apps_uuid === "" || apps_keys === "")) {
             Swal.fire({
                 position: 'top',
                 icon: 'info',
