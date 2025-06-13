@@ -11,7 +11,7 @@ import * as baidu from './baidu';
 import * as goapi from './goapi';
 
 export type Bindings = {
-    MAIN_URLS: string,
+    MAIN_URLS: string, baiduyun_ext: string,
     onedrive_uid: string, onedrive_key: string,
     alicloud_uid: string, alicloud_key: string,
     baiduyun_uid: string, baiduyun_key: string,
