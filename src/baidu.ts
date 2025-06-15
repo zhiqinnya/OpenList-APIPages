@@ -1,11 +1,13 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
 import {showErr} from "./error";
-
+import * as refresh from "./shares/refresh"
+import * as configs from "./shares/configs"
 
 const driver_map: string[] = [
     "https://openapi.baidu.com/oauth/2.0/authorize",
-    "https://openapi.baidu.com/oauth/2.0/token"
+    "https://openapi.baidu.com/oauth/2.0/token",
+
 ]
 
 // 登录申请 ##############################################################################
@@ -103,5 +105,21 @@ export async function oneToken(c: Context) {
     } catch (error) {
         return c.redirect(showErr(<string>error, "", client_key));
     }
+}
+
+// 刷新令牌 ##############################################################################
+export async function genToken(c: Context) {
+    const clients_info: configs.Clients | undefined = configs.getInfo(c);
+    const refresh_text: string | undefined = c.req.query('refresh_ui');
+    if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
+    if (!refresh_text) return c.json({text: "缺少刷新令牌"}, 500);
+    // 请求参数 ==========================================================================
+    const params: Record<string, any> = {
+        client_id: clients_info.servers ? c.env.baiduyun_key : clients_info.app_key,
+        client_secret: clients_info.servers ? c.env.baiduyun_ext : clients_info.secrets,
+        grant_type: 'refresh_token',
+        refresh_token: refresh_text
+    };
+    return await refresh.genToken(c, driver_map[1], params, "GET");
 }
 

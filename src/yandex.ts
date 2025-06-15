@@ -99,3 +99,8 @@ export async function yandexCallBack(c: Context) {
         return c.redirect(showErr("Failed to get access token", "", ""));
     }
 }
+
+// 刷新令牌 ##############################################################################
+export async function genToken(c: Context) {
+    return c.json({text: "此网盘不支持"}, 500);
+}

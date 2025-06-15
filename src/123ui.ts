@@ -45,3 +45,8 @@ export async function oneLogin(c: Context) {
 export async function oneToken(c: Context) {
     return await oneLogin(c);
 }
+
+// 刷新令牌 ##############################################################################
+export async function genToken(c: Context) {
+    return c.json({text: "此网盘不支持"}, 500);
+}

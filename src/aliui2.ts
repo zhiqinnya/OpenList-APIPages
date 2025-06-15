@@ -689,4 +689,9 @@ export async function logout(c: Context) {
         console.error('退出登录失败:', error);
         return c.json({error: '退出登录失败'}, 500);
     }
-} 
+}
+
+// 刷新令牌 ##############################################################################
+export async function genToken(c: Context) {
+    return c.json({text: "此网盘不支持"}, 500);
+}

@@ -1,11 +1,14 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
 import {showErr} from "./error";
+import * as configs from "./shares/configs";
+import * as refresh from "./shares/refresh";
 
 
 const driver_map: string[] = [
     "https://passportapi.115.com/open/authorize",
-    "https://passportapi.115.com/open/authCodeToToken"
+    "https://passportapi.115.com/open/authCodeToToken",
+    "https://passportapi.115.com/open/refreshToken"
 ]
 
 // 登录申请 ##############################################################################
@@ -109,6 +112,17 @@ export async function oneToken(c: Context) {
     }
 }
 
+// 登录申请 ##############################################################################
+export async function genToken(c: Context) {
+    const refresh_text: string | undefined = c.req.query('refresh_ui');
+    if (!refresh_text) return c.json({text: "缺少刷新令牌"}, 500);
+    // 请求参数 ==========================================================================
+    const params: Record<string, any> = {
+        refresh_token: refresh_text
+    };
+    return await refresh.genToken(c, driver_map[2], params, "POST",
+        "data.access_token","data.refresh_token","error");
+}
 
 function getRandomString(length: number): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

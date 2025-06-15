@@ -1,7 +1,8 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
 import {showErr} from "./error";
-
+import * as configs from "./shares/configs";
+import * as refresh from "./shares/refresh";
 
 const driver_map: Record<string, string[]> = {
     "onedrive_go": [
@@ -144,4 +145,22 @@ export async function spSiteID(c: Context) {
     } else {
         return c.json({error: 'Zone does not exist'}, 400);
     }
+}
+
+// 刷新令牌 ##############################################################################
+export async function genToken(c: Context) {
+    const driver_txt: string = <string>c.req.query('apps_types');
+    const clients_info: configs.Clients | undefined = configs.getInfo(c);
+    const refresh_text: string | undefined = c.req.query('refresh_ui');
+    if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
+    if (!refresh_text) return c.json({text: "缺少刷新令牌"}, 500);
+    // 请求参数 ==========================================================================
+    const params: Record<string, any> = {
+        client_id: clients_info.servers ? c.env.onedrive_uid : clients_info.app_uid,
+        client_secret: clients_info.servers ? c.env.onedrive_key : clients_info.app_key,
+        redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback',
+        grant_type: "refresh_token",
+        refresh_token: refresh_text
+    };
+    return await refresh.genToken(c, driver_map[driver_txt][1], params, "POST");
 }

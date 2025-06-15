@@ -1,14 +1,21 @@
 // 获取登录秘钥 #######################################################
-async function getLogin() {
+async function getLogin(refresh = false) {
     let server_use = document.getElementById("server_use").checked;
+    let secret_key = document.getElementById("secret-key").value;
+    let refresh_ui = document.getElementById("refresh-token").value;
     let apps_uuid = document.getElementById("client-id").value;
     let apps_keys = document.getElementById("app-secret").value;
     let apps_type = document.getElementById("site-select").value;
-    let secret_key = document.getElementById("secret-key").value;
+
     console.log(server_use);
-    // 阿里云盘扫码登录v2不需要验证客户端ID和应用机密
-    if (apps_type !== "alicloud_oa" && !server_use && (apps_uuid === "" || apps_keys === "")) {
-        Swal.fire({
+    // 验证秘钥情况 ==================================================
+    if (// 阿里云盘扫码登录v2不需要验证客户端ID和应用机密
+        (apps_type !== "alicloud_oa" && apps_type !== "baiduyun_go" &&
+            !server_use && (apps_uuid === "" || apps_keys === "")) ||
+        (apps_type === "baidunuy_go" && // 百度网盘不需ID
+            !server_use && (secret_key === "" || apps_keys === ""))
+    ) {
+        await Swal.fire({
             position: 'top',
             icon: 'info',
             title: '获取失败',
@@ -22,11 +29,29 @@ async function getLogin() {
         await startAlicloud2Login();
         return;
     }
+    // 刷新秘钥情况 =================================================
+    let base_urls = "/requests?client_uid="
+    if (refresh) {
+        if (!refresh_ui) {
+            Swal.fire({
+                position: 'top',
+                icon: 'info',
+                title: '刷新失败',
+                text: '请先填写Refresh Token',
+                showConfirmButton: true,
+            });
+            return;
+        }
+        base_urls = "/renewapi?client_uid="
+    }
 
     let apps_subs = apps_type.split("_")[0]
-    let post_urls = "/" + apps_subs + "/requests?client_uid=" + apps_uuid
+    let post_urls = "/" + apps_subs + base_urls + apps_uuid
         + "&client_key=" + apps_keys + "&apps_types=" + apps_type
         + "&server_use=" + server_use
+    if (refresh) {
+        post_urls += "&refresh_ui=" + refresh_ui
+    }
     if (apps_subs === "baiduyun") post_urls += "&secret_key=" + secret_key
     try {
         const response = await fetch(post_urls, {
@@ -34,6 +59,29 @@ async function getLogin() {
         });
         // 解析响应内容 ===============================================
         const response_data = await response.json();
+        // 刷新令牌模式 ===============================================
+        if (refresh) {
+            if (response.status === 200) {
+                access_key = document.getElementById("access-token")
+                access_key.value = response_data.access_token;
+                refresh_ui = document.getElementById("refresh-token")
+                refresh_ui.value = response_data.refresh_token;
+                Swal.fire({
+                    icon: 'success',
+                    title: '刷新令牌成功:',
+                    showConfirmButton: true,
+                    timer: 1000
+                });
+            } else Swal.fire({
+                icon: 'error',
+                title: '刷新令牌失败: ',
+                text: response_data.text,
+                showConfirmButton: true,
+                timer: 1000
+            });
+            return;
+        }
+        // 申请登录模式 ================================================================
         if (response.status === 200) {
             if (apps_subs === "onedrive" || apps_subs === "115cloud"
                 || apps_subs === "baiduyun" || apps_subs === "googleui" || apps_subs === "yandex") {
