@@ -89,7 +89,7 @@ export async function yandexCallBack(c: Context) {
                 + `&refresh_token=${token.refresh_token}`
                 + `&client_uid=${server_use == "true" ? "" : client_uid || ""}`
                 + `&client_key=${server_use == "true" ? "" : client_key || ""}`
-                + `&driver_txt=yandex_go`
+                + `&driver_txt=yandexui_go`
             );
         } else {
             return c.redirect(showErr(token.error_description || token.error || "Token request failed", "", ""));

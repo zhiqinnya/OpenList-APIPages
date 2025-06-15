@@ -76,7 +76,7 @@ export async function oneToken(c: Context) {
 
     // 执行请求 ===========================================================================
     try {
-        const paramsString = new URLSearchParams(params_all).toString();
+        // const paramsString = new URLSearchParams(params_all).toString();
         const urlWithParams = new URL(client_url);
         Object.keys(params_all).forEach(key => {
             urlWithParams.searchParams.append(key, params_all[key]);
@@ -99,9 +99,9 @@ export async function oneToken(c: Context) {
                 + `&driver_txt=${driver_txt}`
             );
         }
-        return c.redirect(showErr(json.error_description, client_key));
+        return c.redirect(showErr(json.error_description, "", client_key));
     } catch (error) {
-        return c.redirect(showErr(<string>error, client_key));
+        return c.redirect(showErr(<string>error, "", client_key));
     }
 }
 
