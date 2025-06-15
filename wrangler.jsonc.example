@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cf-worker-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-05-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "MAIN_URLS": "api.oplist.org",
+    "onedrive_uid": "",
+    "onedrive_key": "",
+    "alicloud_uid": "",
+    "alicloud_key": "",
+    "baiduyun_uid": "",
+    "baiduyun_key": "",
+    "baiduyun_ext": "",
+    "115cloud_uid": "",
+    "115cloud_key": "",
+    "googleui_uid": "",
+    "googleui_key": ""
+  },
+  "site": {
+    "bucket": "./public"
+  }
+}

@@ -4,11 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="deal ali cloud scan login">
-      <change beforePath="$PROJECT_DIR$/.idea/cf-worker-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cf-worker-api.iml" afterDir="false" />
+    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="add server app">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/115ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/115ui.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/123ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/123ui.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aliui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/aliui.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/baidu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/baidu.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/goapi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/goapi.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/oneui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/oneui.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wrangler.jsonc.example" beforeDir="false" afterPath="$PROJECT_DIR$/wrangler.jsonc.example" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +73,11 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\AList\cf-worker-api" />
+      <recent name="G:\AList\cf-worker-api\public" />
+      <recent name="G:\AList\cf-worker-api\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\AList\cf-worker-api\public" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -129,7 +139,47 @@
       <option name="project" value="LOCAL" />
       <updated>1749714906877</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="deal ali cloud scan login">
+      <option name="closed" value="true" />
+      <created>1749720117274</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1749720117274</updated>
+    </task>
+    <task id="LOCAL-00007" summary="deal 115 baidu cloud">
+      <option name="closed" value="true" />
+      <created>1749806487624</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1749806487624</updated>
+    </task>
+    <task id="LOCAL-00008" summary="deal google &amp; 123 pan">
+      <option name="closed" value="true" />
+      <created>1749813968987</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1749813968987</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add server app">
+      <option name="closed" value="true" />
+      <created>1749817021359</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1749817021359</updated>
+    </task>
+    <task id="LOCAL-00010" summary="add server app">
+      <option name="closed" value="true" />
+      <created>1749817071777</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1749817071777</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,6 +191,9 @@
     <MESSAGE value="add onedrive area: cn us de" />
     <MESSAGE value="deal merge issue" />
     <MESSAGE value="deal ali cloud scan login" />
-    <option name="LAST_COMMIT_MESSAGE" value="deal ali cloud scan login" />
+    <MESSAGE value="deal 115 baidu cloud" />
+    <MESSAGE value="deal google &amp; 123 pan" />
+    <MESSAGE value="add server app" />
+    <option name="LAST_COMMIT_MESSAGE" value="add server app" />
   </component>
 </project>

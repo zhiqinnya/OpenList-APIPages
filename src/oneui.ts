@@ -1,5 +1,7 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
+import {showErr} from "./error";
+
 
 const driver_map: Record<string, string[]> = {
     "onedrive_go": [
@@ -7,7 +9,7 @@ const driver_map: Record<string, string[]> = {
         'https://login.microsoftonline.com/common/oauth2/v2.0/token'
     ],
     "onedrive_cn": [
-        'https://login.chinacloudapi.cn/common/oauth2/authorize',
+        'https://login.chinacloudapi.cn/common/oauth2/v2.0/authorize',
         'https://login.chinacloudapi.cn/common/oauth2/token'
     ],
     "onedrive_de": [
@@ -22,14 +24,17 @@ const driver_map: Record<string, string[]> = {
 
 // 登录申请 ##############################################################################
 export async function oneLogin(c: Context) {
-    const client_uid = <string>c.req.query('client_uid');
-    const client_key = <string>c.req.query('client_key');
-    const driver_txt = <string>c.req.query('apps_type');
+    const client_uid: string = <string>c.req.query('client_uid');
+    const client_key: string = <string>c.req.query('client_key');
+    const driver_txt: string = <string>c.req.query('apps_types');
+    const server_use: string = <string>c.req.query('server_use');
+    if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
+        return c.json({text: "参数缺少"}, 500);
     const scopes_all = 'offline_access Files.ReadWrite.All';
     const client_url: string = driver_map[driver_txt][0];
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        client_id: client_uid,
+        client_id: server_use == "true" ? c.env.onedrive_uid : client_uid,
         scope: scopes_all,
         response_type: 'code',
         redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback'
@@ -43,9 +48,12 @@ export async function oneLogin(c: Context) {
         const response = await fetch(urlWithParams.href, {
             method: 'GET',
         });
-        local.setCookie(c, 'client_uid', client_uid);
-        local.setCookie(c, 'client_key', client_key);
-        local.setCookie(c, 'apps_types', driver_txt);
+        if (server_use == "false") {
+            local.setCookie(c, 'client_uid', client_uid);
+            local.setCookie(c, 'client_key', client_key);
+        }
+        local.setCookie(c, 'driver_txt', driver_txt);
+        local.setCookie(c, 'server_use', server_use);
         return c.json({text: response.url}, 200);
     } catch (error) {
         return c.json({text: error}, 500);
@@ -54,30 +62,26 @@ export async function oneLogin(c: Context) {
 
 // 令牌申请 ##############################################################################
 export async function oneToken(c: Context) {
-    let login_data, client_uid, client_key, driver_txt, client_url, params_all;
+    let login_data, client_uid, client_key, driver_txt, client_url, server_use, params_all;
     try { // 请求参数 ====================================================================
         login_data = <string>c.req.query('code');
-        client_uid = <string>local.getCookie(c, 'client_uid')
-        client_key = <string>local.getCookie(c, 'client_key')
-        driver_txt = <string>local.getCookie(c, 'apps_types')
+        server_use = local.getCookie(c, 'server_use')
+        driver_txt = <string>local.getCookie(c, 'driver_txt')
+        client_uid = client_key = ""
+        if (server_use == "false") {
+            client_uid = <string>local.getCookie(c, 'client_uid')
+            client_key = <string>local.getCookie(c, 'client_key')
+        }
         client_url = driver_map[driver_txt][1];
         params_all = {
-            client_id: client_uid,
-            client_secret: client_key,
+            client_id: server_use == "true" ? c.env.onedrive_uid : client_uid,
+            client_secret: server_use == "true" ? c.env.onedrive_key : client_key,
             redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback',
             code: login_data,
             grant_type: 'authorization_code'
         };
     } catch (error) {
-        return c.redirect(
-            `/?message_err=${"授权失败，请检查: <br>" +
-            "1、应用ID和应用机密是否正确<br>" +
-            "2、登录账号是否具有应用权限<br>" +
-            "3、回调地址是否包括上面地址<br>" +
-            "4、登录可能过期，请重新登录<br>" +
-            "错误信息: <br> " + error}`
-            + `&client_uid=NULL`
-            + `&client_key=`);
+        return c.redirect(showErr("参数错误", "", ""));
     }
     // console.log(login_data);
 
@@ -92,34 +96,52 @@ export async function oneToken(c: Context) {
             body: paramsString,
         });
         // console.log(response);
-        local.deleteCookie(c, 'client_uid');
-        local.deleteCookie(c, 'client_key');
+        if (server_use == "false") {
+            local.deleteCookie(c, 'client_uid');
+            local.deleteCookie(c, 'client_key');
+        }
         local.deleteCookie(c, 'apps_types');
+        local.deleteCookie(c, 'driver_txt');
+        local.deleteCookie(c, 'server_use');
         if (!response.ok)
-            return c.redirect(
-                `/?message_err=${"授权失败，请检查: <br>" +
-                "1、应用ID和应用机密是否正确<br>" +
-                "2、登录账号是否具有应用权限<br>" +
-                "3、回调地址是否包括上面地址<br>" +
-                "错误信息: <br>" + response.text()}`
-                + `&client_uid=${client_uid}`
-                + `&client_key=${client_key}`);
+            return c.redirect(showErr("请求失败", client_uid, client_key));
         const json: Record<string, any> = await response.json();
         if (json.token_type === 'Bearer') {
             return c.redirect(
                 `/?access_token=${json.access_token}`
                 + `&refresh_token=${json.refresh_token}`
-                + `&client_uid=${client_uid}`
-                + `&client_key=${client_key}`);
+                + `&client_uid=${server_use == "true" ? "" : client_uid}`
+                + `&client_key=${server_use == "true" ? "" : client_key}`
+                + `&driver_txt=${driver_txt}`
+            );
         }
     } catch (error) {
-        return c.redirect(
-            `/?message_err=${"授权失败，请检查: <br>" +
-            "1、应用ID和应用机密是否正确<br>" +
-            "2、登录账号是否具有应用权限<br>" +
-            "3、回调地址是否包括上面地址<br>" +
-            "错误信息: <br>" + error}`
-            + `&client_uid=${client_uid}`
-            + `&client_key=${client_key}`);
+        return c.redirect(showErr(<string>error, client_uid, client_key));
+    }
+}
+
+export async function spSiteID(c: Context) {
+    type Req = {
+        access_token: string;
+        site_url: string;
+        zone: string;
+    };
+    const req: Req = await c.req.json();
+
+    const u = new URL(req.site_url);
+    const siteName = u.pathname;
+
+    if (driver_map[req.zone]) {
+        const response = await fetch(`${driver_map[req.zone][1]}/v1.0/sites/root:/${siteName}`, {
+            headers: {'Authorization': `Bearer ${req.access_token}`}
+        });
+        if (!response.ok) {
+            return c.json({error: 'Failed to fetch site ID'}, 403);
+        }
+        const data: Record<string, any> = await response.json();
+        console.log(data);
+        return c.json(data);
+    } else {
+        return c.json({error: 'Zone does not exist'}, 400);
     }
 }

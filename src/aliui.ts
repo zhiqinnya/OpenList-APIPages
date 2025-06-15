@@ -1,4 +1,5 @@
 import {Context} from "hono";
+import * as local from "hono/cookie";
 
 const driver_map = [
     'https://openapi.aliyundrive.com/oauth/authorize/qrcode',
@@ -29,9 +30,15 @@ interface AliQrcodeReq {
 // 登录申请 ##############################################################################
 export async function alyLogin(c: Context) {
     try {
+        const client_uid: string = <string>c.req.query('client_uid');
+        const client_key: string = <string>c.req.query('client_key');
+        const driver_txt: string = <string>c.req.query('apps_types');
+        const server_use: string = <string>c.req.query('server_use');
+        if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
+            return c.json({text: "参数缺少"}, 500);
         const req: AliQrcodeReq = {
-            client_id: <string>c.req.query('client_uid'),
-            client_secret: <string>c.req.query('client_key'),
+            client_id: server_use == "true" ? c.env.alicloud_uid : client_uid,
+            client_secret: server_use == "true" ? c.env.alicloud_key : client_key,
             scopes: ['user:base', 'file:all:read', 'file:all:write']
         }
         const response = await fetch(driver_map[0], {
@@ -43,6 +50,8 @@ export async function alyLogin(c: Context) {
             const error: AliAccessTokenErr = await response.json();
             return c.json({text: `${error.code}: ${error.message}`}, 403);
         }
+        local.setCookie(c, 'driver_txt', driver_txt);
+        local.setCookie(c, 'server_use', server_use);
         const data: Record<string, any> = await response.json();
         console.log(data);
         return c.json({
@@ -57,9 +66,10 @@ export async function alyLogin(c: Context) {
 
 // 令牌申请 ##############################################################################
 export async function alyToken(c: Context) {
+    let server_use: string = <string>local.getCookie(c, 'server_use')
     const req: AliAccessTokenReq = {
-        client_id: <string>c.req.query('client_id'),
-        client_secret: <string>c.req.query('client_secret'),
+        client_id: server_use == "true" ? c.env.alicloud_uid : <string>c.req.query('client_id'),
+        client_secret: server_use == "true" ? c.env.alicloud_key : <string>c.req.query('client_secret'),
         grant_type: <string>c.req.query('grant_type'),
         code: <string>c.req.query('code'),
         refresh_token: <string>c.req.query('refresh_token')
@@ -79,6 +89,8 @@ export async function alyToken(c: Context) {
         }
         req.code = code_data.authCode;
     }
+    local.deleteCookie(c, 'driver_txt');
+    local.deleteCookie(c, 'server_use');
     try {
         const response = await fetch(driver_map[1], {
             method: 'POST',
