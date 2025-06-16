@@ -20,7 +20,7 @@ export type Bindings = {
     baiduyun_uid: string, baiduyun_key: string,
     cloud115_uid: string, cloud115_key: string,
     googleui_uid: string, googleui_key: string,
-    YANDEX_CLIENT_ID: string, YANDEX_CLIENT_SECRET: string,
+    yandexui_uid: string, yandexui_key: string,
 }
 
 const app = new Hono<{ Bindings: Bindings }>()

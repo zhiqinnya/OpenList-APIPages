@@ -80,7 +80,7 @@ async function getToken() {
             if (siteSelect.value == "baiduyun_ob") {
                 document.getElementById("app-secret").value = "NqOMXF6XGhGRIGemsQ9nG0Na";
                 document.getElementById("secret-key").value = "SVT6xpMdLcx6v4aCR4wT8BBOTbzFO8LM";
-
+                document.getElementById("callback-url").value = "oob";
             }
         } else {
             document.getElementById('client-id-view').hidden = false;
