@@ -61,7 +61,7 @@ app.get('/alicloud2/check_login', async (c: Context) => {
     return aliui2.checkLogin(c);
 });
 // 令牌刷新 ##############################################################################
-app.get('/alicloud/renewapi', async (c: Context) => {
+app.get('/alicloud2/renewapi', async (c: Context) => {
     return aliui2.genToken(c);
 });
 // 阿里云盘扫码2 - 获取用户信息 ##############################################################################

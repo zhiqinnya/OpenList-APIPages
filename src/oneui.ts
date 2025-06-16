@@ -29,16 +29,18 @@ export async function oneLogin(c: Context) {
     const client_key: string = <string>c.req.query('client_key');
     const driver_txt: string = <string>c.req.query('apps_types');
     const server_use: string = <string>c.req.query('server_use');
-    if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
-        return c.json({text: "参数缺少"}, 500);
+    if (server_use == "false")
+        if (!driver_txt || !client_uid || !client_key)
+            return c.json({text: "参数缺少"}, 500);
     const scopes_all = 'offline_access Files.ReadWrite.All';
     const client_url: string = driver_map[driver_txt][0];
+    const redirector: string = 'https://' + c.env.MAIN_URLS + '/onedrive/callback'
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
         client_id: server_use == "true" ? c.env.onedrive_uid : client_uid,
         scope: scopes_all,
         response_type: 'code',
-        redirect_uri: 'https://' + c.env.MAIN_URLS + '/onedrive/callback'
+        redirect_uri: redirector
     };
     const urlWithParams = new URL(client_url);
     Object.keys(params_all).forEach(key => {
