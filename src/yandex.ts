@@ -19,7 +19,7 @@ export async function yandexLogin(c: Context) {
     let client_uid: string | undefined = c.req.query('client_uid');
     let client_key: string | undefined = c.req.query('client_key');
     let server_use: string | undefined = c.req.query('server_use');
-    if(!server_use)
+    if (!server_use)
         return c.json({text: "参数缺少"}, 500);
     if (!client_uid || !client_key)
         if (server_use == "false")
@@ -47,16 +47,21 @@ export async function yandexLogin(c: Context) {
 
 
 export async function yandexCallBack(c: Context) {
+    let client_uid, client_key;
     const env = c.env;
     const code = <string>c.req.query("code");
     const error = <string>c.req.query("error");
+    const server_use = local.getCookie(c, 'server_use')
+    if (server_use && server_use == "true") {
+        client_uid = local.getCookie(c, 'client_uid')
+        client_key = local.getCookie(c, 'client_key')
+    }
     const error_description = <string>c.req.query("error_description");
-
     const getToken = async (): Promise<Token> => {
         const params = new URLSearchParams();
         params.append("grant_type", "authorization_code");
-        params.append("client_id", env.yandexui_uid);
-        params.append("client_secret", env.yandexui_key);
+        params.append("client_id", server_use == "true" ? env.yandexui_uid : env.client_uid);
+        params.append("client_secret", server_use == "true" ? env.yandexui_key : env.client_key);
         params.append("code", code);
 
         const resp = await fetch("https://oauth.yandex.com/token", {
