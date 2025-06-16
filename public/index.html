@@ -17,12 +17,12 @@
     <div class="mb-3">
         <label for="site-select" class="form-label">网盘名称</label>
         <select id="site-select" class="form-select">
-            <!--            <option value="onedrive_pr" selected>OneDrive 个人账户</option>-->
-            <option value="onedrive_go" selected>OneDrive 企业版本</option>
+            <option value="onedrive_go" selected>OneDrive 企业账号</option>
+            <option value="onedrive_pr">OneDrive 个人账号</option>
             <option value="onedrive_cn">OneDrive 世纪互联</option>
             <option value="onedrive_us">OneDrive 美国版本</option>
             <option value="onedrive_de">OneDrive 德国版本</option>
-            <option value="alicloud_qr">阿里网盘 应用登录</option>
+            <option value="alicloud_qr">阿里云盘 应用登录</option>
             <option value="alicloud_oa">阿里云盘 直接登录</option>
             <option value="baiduyun_go">百度网盘 验证登录</option>
             <option value="baiduyun_ob">百度网盘 OOB 验证</option>
@@ -54,7 +54,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="callback-url" class="form-label">回调地址</label>
+        <label for="callback-url" class="form-label">回调地址（Callback URL）</label>
         <input type="text" id="callback-url" class="form-control" value="https://api.oplist.org/onedrive/callback"
                readonly onclick="autoCopy(this)">
     </div>
@@ -68,12 +68,12 @@
     </div>
 
     <div class="mb-3">
-        <label for="access-token" class="form-label">访问秘钥</label>
+        <label for="access-token" class="form-label">访问令牌（Access Token）</label>
         <textarea id="access-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
     </div>
 
     <div class="mb-3">
-        <label for="refresh-token" class="form-label">刷新秘钥</label>
+        <label for="refresh-token" class="form-label">刷新令牌（Refresh Token）</label>
         <textarea id="refresh-token" class="form-control" rows="3" readonly onclick="autoCopy(this)"></textarea>
     </div>
     <div class="mb-3" id="sharepoint-url-view">

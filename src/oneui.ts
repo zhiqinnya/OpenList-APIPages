@@ -5,6 +5,10 @@ import * as configs from "./shares/configs";
 import * as refresh from "./shares/refresh";
 
 const driver_map: Record<string, string[]> = {
+    "onedrive_pr": [
+        'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+        'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+    ],
     "onedrive_go": [
         'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
         'https://login.microsoftonline.com/common/oauth2/v2.0/token'

@@ -90,6 +90,7 @@ async function getToken() {
         }
         if (siteSelect.value == "baiduyun_ob" ||
             siteSelect.value == "123cloud_go" ||
+            // siteSelect.value == "onedrive_go" ||
             siteSelect.value == "onedrive_cn" ||
             siteSelect.value == "onedrive_us" ||
             siteSelect.value == "onedrive_de" ||
