@@ -26,7 +26,13 @@
 | `server_set` | `str` | 是   | true                             | 是否使用服务器预设的应用ID和密钥   |
 | `secret_key` | `str` | 否   | 3yp8NOMsRulxll44f5ayrxF1vgBfPW85 | 百度网盘额外需要 secret_key字段    |
 
+- #### 返回内容
 
+如果执行无误，回返回url
+
+| 参数名称 | 类型  | 必要 | 示例                                         | 说明               |
+| -------- | ----- | ---- | -------------------------------------------- | ------------------ |
+| `text`   | `str` | 否   | https://example.com/oauth2/login/?xxx=xxxxxx | 返回登录链接到前端 |
 
 ### 回调接口
 
@@ -45,6 +51,19 @@
 | `client_key` | `str` | 否   | 09F260A4BF5EF7F4181E35E59759C0BC | 提供云盘验证码登录提供client_key |
 | `grant_type` | `str` | 否   | authorization_code               | 提供云盘，固定authorization_code |
 
+- #### 返回内容
+
+如果执行无误，回返回url
+
+| 参数名称          | 类型  | 必要 | 示例                             | 说明               |
+| ----------------- | ----- | ---- | -------------------------------- | ------------------ |
+| `<url 302重定向>` | `302` | 否   | `/?......`                       | 返回登录链接到前端 |
+| `access_token`    | `str` | 否   | VqKbrWpetI3HnvyvsWquv9BJFL3j4xjc | 返回访问令牌到前端 |
+| `refresh_token`   | `str` | 否   | oMMPXrCCrRwMoqVD321Z03PSoxmsAKjI | 返回刷新令牌到前端 |
+| `client_uid`      | `str` | 否   | b2eaau943b1bx464                 | 用户传入的客户端ID |
+| `client_key`      | `str` | 否   | SHcAplYIY679BEVF9FveGKtLuSI6MikU | 用户传入的应用密钥 |
+| `driver_txt`      | `str` | 否   | onedrive                         | 用户传入的驱动类型 |
+
 ### 刷新令牌
 
 - #### 接口地址
@@ -61,6 +80,15 @@
 | `client_uid` | `str` | 否   | 4308adf60f3fe4058533             | 提供云盘验证码登录提供client_uid |
 | `client_key` | `str` | 否   | 09F260A4BF5EF7F4181E35E59759C0BC | 提供云盘验证码登录提供client_key |
 | `secret_key` | `str` | 否   | 09F260A4BF5EF7F4181E35E59759C0BC | 百度网盘额外需要 secret_key字段  |
+
+- #### 返回内容
+
+如果执行无误，回返回url
+
+| 参数名称        | 类型  | 必要 | 示例            | 说明               |
+| --------------- | ----- | ---- | --------------- | ------------------ |
+| `refresh_token` | `str` | 是   | xxxxxxxxxxxxxxx | 返回刷新令牌到前端 |
+| `access_token`  | `str` | 是   | xxxxxxxxxxxxxxx | 返回访问令牌到前端 |
 
 ## 配置设置
 
@@ -80,6 +108,41 @@
 
 
 ## 部署方法
+
+### 克隆代码
+
+```shell
+git clone https://github.com/OpenListTeam/cf-worker-api.git
+```
+
+### 修改配置
+
+创建并修改`wrangler.jsonc`
+
+```shell
+cp wrangler.jsonc.example wrangler.jsonc
+```
+
+修改变量信息：
+
+```
+  "vars": {
+    "MAIN_URLS": "api.example.com",
+    "onedrive_uid": "*****************************",
+    "onedrive_key": "*****************************",
+    "alicloud_uid": "*****************************",
+    "alicloud_key": "*****************************",
+    "baiduyun_uid": "*****************************",
+    "baiduyun_key": "*****************************",
+    "baiduyun_ext": "*****************************",
+    "115cloud_uid": "*****************************",
+    "115cloud_key": "*****************************",
+    "googleui_uid": "*****************************",
+    "googleui_key": "*****************************",
+    "yandexui_uid": "*****************************",
+    "yandexui_key": "*****************************"
+  },
+```
 
 ### 测试代码
 
