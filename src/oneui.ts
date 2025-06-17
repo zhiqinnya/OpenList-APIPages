@@ -155,7 +155,7 @@ export async function spSiteID(c: Context) {
 
 // 刷新令牌 ##############################################################################
 export async function genToken(c: Context) {
-    const driver_txt: string = <string>c.req.query('apps_types');
+    const driver_txt: string = <string>c.req.query('driver_txt');
     const clients_info: configs.Clients | undefined = configs.getInfo(c);
     const refresh_text: string | undefined = c.req.query('refresh_ui');
     if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
