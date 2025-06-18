@@ -12,13 +12,15 @@ async function getLogin(refresh = false) {
     // 验证秘钥情况 ==================================================
     if (!server_use) {
         if (apps_type !== "alicloud_oa" &&
-            apps_type !== "baidunuy_go" &&
+            apps_type !== "baiduyun_go" &&
             apps_type !== "baiduyun_ob")
-            if (apps_uuid === "" || apps_keys === "")
+            if (apps_uuid === "" || apps_keys === ""){
                 check_flag = false
-        if (apps_subs === "baidunuy")
-            if (secret_key === "" || apps_keys === "")
+            }
+        if (apps_subs === "baiduyun")
+            if (secret_key === "" || apps_keys === ""){
                 check_flag = false
+            }
         if (!check_flag) {
             await Swal.fire({
                 position: 'top',
@@ -91,7 +93,7 @@ async function getLogin(refresh = false) {
         // 申请登录模式 ================================================================
         if (response.status === 200) {
             if (apps_subs === "onedrive" || apps_subs === "115cloud"
-                || apps_subs === "googleui" || apps_subs === "yandex"
+                || apps_subs === "googleui" || apps_subs === "yandexui"
                 || apps_type === "baiduyun_go"
             ) {
                 window.location.href = response_data.text;
