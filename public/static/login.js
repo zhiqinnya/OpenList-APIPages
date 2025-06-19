@@ -52,7 +52,7 @@ async function getLogin(refresh = false) {
 
     if (apps_type === "alicloud_oa") apps_subs = "alicloud2"
     let post_urls = "/" + apps_subs + base_urls + apps_uuid
-        + "&client_key=" + apps_keys + "&apps_types=" + apps_type
+        + "&client_key=" + apps_keys + "&driver_txt=" + apps_type
         + "&server_use=" + server_use
     if (refresh) {
         post_urls += "&refresh_ui=" + refresh_ui
