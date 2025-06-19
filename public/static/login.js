@@ -89,7 +89,7 @@ async function getLogin(refresh = false) {
         // 申请登录模式 ================================================================
         if (response.status === 200) {
             if (apps_subs === "onedrive" || apps_subs === "115cloud"
-                || apps_subs === "googleui" || apps_subs === "yandex"
+                || apps_subs === "googleui" || apps_subs === "yandexui"
                 || apps_type === "baiduyun_go"
             ) {
                 window.location.href = response_data.text;
