@@ -11,16 +11,12 @@ async function getLogin(refresh = false) {
     let check_flag = true;
     // 验证秘钥情况 ==================================================
     if (!server_use) {
-        if (apps_type !== "alicloud_oa" &&
-            apps_type !== "baiduyun_go" &&
-            apps_type !== "baiduyun_ob")
-            if (apps_uuid === "" || apps_keys === ""){
+        if (apps_type !== "alicloud_oa" && apps_subs !== "baiduyun")
+            if (apps_uuid === "" || apps_keys === "")
                 check_flag = false
-            }
         if (apps_subs === "baiduyun")
-            if (secret_key === "" || apps_keys === ""){
+            if (secret_key === "" || apps_keys === "")
                 check_flag = false
-            }
         if (!check_flag) {
             await Swal.fire({
                 position: 'top',
@@ -56,7 +52,7 @@ async function getLogin(refresh = false) {
 
     if (apps_type === "alicloud_oa") apps_subs = "alicloud2"
     let post_urls = "/" + apps_subs + base_urls + apps_uuid
-        + "&client_key=" + apps_keys + "&apps_types=" + apps_type
+        + "&client_key=" + apps_keys + "&driver_txt=" + apps_type
         + "&server_use=" + server_use
     if (refresh) {
         post_urls += "&refresh_ui=" + refresh_ui
