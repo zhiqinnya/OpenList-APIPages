@@ -3,7 +3,9 @@ async function getToken() {
     let message_err = "";
     if (hash) {
         try {
-            const callbackData = JSON.parse(atob(hash));
+            const jsonBytes = Uint8Array.from(atob(hash), c => c.charCodeAt(0));
+            const json = new TextDecoder().decode(jsonBytes);
+            const callbackData = JSON.parse(json);
             const server_use = callbackData.server_use;
             const client_uid = callbackData.client_uid;
             const secret_key = callbackData.secret_key;
