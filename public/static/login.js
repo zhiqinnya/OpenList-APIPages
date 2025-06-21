@@ -140,7 +140,7 @@ async function getLogin(refresh = false) {
                 let auth_data = await auth_post.json();
                 if (auth_post.status === 200) {
                     window.location.href = `/?driver_txt=${driver_txt}`
-                        + `access_token=${auth_data.access_token}`
+                        + `&access_token=${auth_data.access_token}`
                         + `&refresh_token=${auth_data.refresh_token}`
                         + `&client_uid=${client_uid}`
                         + `&client_key=${client_key}`;
