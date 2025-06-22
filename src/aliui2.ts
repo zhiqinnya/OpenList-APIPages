@@ -703,6 +703,6 @@ export async function genToken(c: Context) {
         refresh_token: refresh_text
     };
     const post_url = "https://openapi.aliyundrive.com/oauth/access_token"
-    return await refresh.genToken(c, post_url, params, "POST",
+    return await refresh.pubRenew(c, post_url, params, "POST",
         "access_token", "refresh_token", "message");
 }

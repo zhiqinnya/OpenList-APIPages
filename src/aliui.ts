@@ -125,6 +125,6 @@ export async function genToken(c: Context) {
         grant_type: 'refresh_token',
         refresh_token: refresh_text
     };
-    return await refresh.genToken(c, driver_map[1], params, "POST",
+    return await refresh.pubRenew(c, driver_map[1], params, "POST",
         "access_token", "refresh_token", "message");
 }

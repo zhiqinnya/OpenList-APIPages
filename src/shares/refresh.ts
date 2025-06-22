@@ -1,7 +1,8 @@
 // 登录申请 ##############################################################################
 import {Context} from "hono";
+import {Requests} from "./request";
 
-export async function genToken(c: Context,
+export async function pubRenew(c: Context,
                                APIUrl: string,
                                Params: Record<string, string>,
                                Method: string = "GET",

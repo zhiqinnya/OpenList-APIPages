@@ -11,6 +11,7 @@ import * as ui123 from './123ui';
 import * as baidu from './baidu';
 import * as goapi from './goapi';
 import * as yandex from './yandex';
+import * as drops from './drops';
 import {genToken} from "./baidu";
 
 export type Bindings = {
@@ -21,11 +22,23 @@ export type Bindings = {
     cloud115_uid: string, cloud115_key: string,
     googleui_uid: string, googleui_key: string,
     yandexui_uid: string, yandexui_key: string,
+    dropboxs_uid: string, dropboxs_key: string,
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
 app.use("*", serveStatic({manifest: manifest, root: "./"}));
-
+// 登录申请 ##############################################################################
+app.get('/dropboxs/requests', async (c) => {
+    return drops.getLogin(c);
+})
+// 令牌申请 ##############################################################################
+app.get('/dropboxs/callback', async (c) => {
+    return drops.urlParse(c);
+})
+// 令牌刷新 ##############################################################################
+app.get('/dropboxs/renewapi', async (c: Context) => {
+    return drops.apiRenew(c);
+});
 // 登录申请 ##############################################################################
 app.get('/onedrive/requests', async (c) => {
     return oneui.oneLogin(c);
