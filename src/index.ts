@@ -3,16 +3,16 @@ import {KVNamespace} from '@cloudflare/workers-types';
 import {serveStatic} from 'hono/cloudflare-workers' // @ts-ignore
 import manifest from '__STATIC_CONTENT_MANIFEST'
 import * as local from "hono/cookie";
-import * as oneui from './oneui';
-import * as aliui from './aliui';
-import * as aliui2 from './aliui2';
-import * as ui115 from './115ui';
-import * as ui123 from './123ui';
-import * as baidu from './baidu';
-import * as goapi from './goapi';
-import * as yandex from './yandex';
-import * as drops from './drops';
-import {genToken} from "./baidu";
+import * as oneui from './driver/onedrive_oa';
+import * as aliui from './driver/alicloud_oa';
+import * as aliui2 from './driver/alicloud_qr';
+import * as ui115 from './driver/115cloud_oa';
+import * as ui123 from './driver/123cloud_oa';
+import * as baidu from './driver/baiduyun_oa';
+import * as goapi from './driver/googleui_oa';
+import * as yandex from './driver/yandexui_oa';
+import * as drops from './driver/dropboxs_oa';
+import {genToken} from "./driver/baiduyun_oa";
 
 export type Bindings = {
     MAIN_URLS: string, baiduyun_ext: string,

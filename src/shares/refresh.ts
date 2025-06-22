@@ -33,7 +33,7 @@ export async function pubRenew(c: Context,
             }, 200);
         return c.json({text: result_json[error_name]}, 500);
     } catch (error) {
-        console.error("刷新token失败", error);
+        // console.error("刷新token失败", error);
         return c.json({text: error}, 500);
     }
 }

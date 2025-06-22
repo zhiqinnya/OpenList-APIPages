@@ -1,9 +1,9 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
-import {showErr} from "./error";
-import * as configs from "./shares/configs";
-import * as refresh from "./shares/refresh";
-import {encodeCallbackData} from "./shares/callback-data";
+import {showErr} from "../shares/message";
+import * as configs from "../shares/configs";
+import * as refresh from "../shares/refresh";
+import {encodeCallbackData,Secrets} from "../shares/secrets";
 
 const driver_map: string[] = [
     "https://accounts.google.com/o/oauth2/v2/auth",
@@ -100,7 +100,7 @@ export async function oneToken(c: Context) {
         local.deleteCookie(c, 'server_use');
         let json: Record<string, any> = await response.json();
         if (json.token_type == "Bearer") {
-            const callbackData: CallbackData = {
+            const callbackData: Secrets = {
                 access_token: json.access_token,
                 refresh_token: json.refresh_token,
                 client_uid: client_uid,

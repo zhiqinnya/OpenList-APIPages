@@ -1,7 +1,7 @@
 import {Context} from "hono";
 import * as local from "hono/cookie";
-import * as configs from "./shares/configs";
-import * as refresh from "./shares/refresh";
+import * as configs from "../shares/configs";
+import * as refresh from "../shares/refresh";
 
 // 阿里云盘扫码登录相关接口定义
 interface QRCodeData {

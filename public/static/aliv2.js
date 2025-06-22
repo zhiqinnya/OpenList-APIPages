@@ -27,7 +27,7 @@ function generateClientFingerprint() {
     }
 
     clientFingerprint = Math.abs(hash).toString(36);
-    console.log('客户端指纹生成:', clientFingerprint);
+    // console.log('客户端指纹生成:', clientFingerprint);
     return clientFingerprint;
 }
 
@@ -65,7 +65,7 @@ async function startAlicloud2Login() {
             // 显示过期时间信息
             if (result.expires_in) {
                 const expireMinutes = Math.floor(result.expires_in / 60);
-                console.log(`会话将在 ${expireMinutes} 分钟后过期`);
+                // console.log(`会话将在 ${expireMinutes} 分钟后过期`);
             }
 
             startStatusCheck();
@@ -223,7 +223,7 @@ async function refreshQRCode() {
         try {
             await fetchWithFingerprint(`/alicloud2/logout?session_id=${alicloud2SessionId}`);
         } catch (e) {
-            console.log('清理旧会话失败:', e);
+            // console.log('清理旧会话失败:', e);
         }
         alicloud2SessionId = null;
     }

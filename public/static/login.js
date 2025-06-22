@@ -1,10 +1,12 @@
+// import Swal from 'sweetalert2';
+
 // 获取登录秘钥 #######################################################
 async function getLogin(refresh = false) {
-    let server_use = document.getElementById("server_use").checked;
-    let secret_key = document.getElementById("secret-key").value;
-    let client_uid = document.getElementById("client-id").value;
-    let client_key = document.getElementById("app-secret").value;
-    let driver_txt = document.getElementById("site-select").value;
+    let server_use = document.getElementById("server-use-input").checked;
+    let secret_key = document.getElementById("secret-key-input").value;
+    let client_uid = document.getElementById("client-uid-input").value;
+    let client_key = document.getElementById("client-key-input").value;
+    let driver_txt = document.getElementById("driver-txt-input").value;
     let refresh_ui = document.getElementById("refresh-token").value;
     let driver_pre = driver_txt.split("_")[0]
     let check_flag = true;
@@ -36,7 +38,7 @@ async function getLogin(refresh = false) {
     let base_urls = "/requests?client_uid="
     if (refresh) {
         if (!refresh_ui) {
-            Swal.fire({
+            await Swal.fire({
                 position: 'top',
                 icon: 'info',
                 title: '刷新失败',
@@ -66,19 +68,19 @@ async function getLogin(refresh = false) {
         // 刷新令牌模式 ===============================================
         if (refresh) {
             if (response.status === 200) {
-                access_key = document.getElementById("access-token")
+                const access_key = document.getElementById("access-token")
                 access_key.value = response_data.access_token;
                 refresh_ui = document.getElementById("refresh-token")
                 refresh_ui.value = response_data.refresh_token;
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
-                    title: '刷新令牌成功:',
+                    title: '刷新令牌成功',
                     showConfirmButton: true,
                     timer: 1000
                 });
-            } else Swal.fire({
+            } else await Swal.fire({
                 icon: 'error',
-                title: '刷新令牌失败: ',
+                title: '刷新令牌失败',
                 text: response_data.text,
                 showConfirmButton: true,
                 timer: 1000
@@ -101,7 +103,7 @@ async function getLogin(refresh = false) {
                     title: '提示',
                     html: '请在新打开的页面获取授权码并粘贴到下方：' +
                         '<input id="authCodeInput" type="text"' +
-                        'style="margin-top: 10px; width: calc(100% - 20px);">',
+                        ' style="margin-top: 10px; width: calc(100% - 20px);">',
                     confirmButtonText: 'OK',
                     preConfirm: () => {
                         return document.getElementById('authCodeInput').value;
@@ -145,18 +147,18 @@ async function getLogin(refresh = false) {
                         client_key: client_key
                     };
                     window.location.hash = "#" + encodeCallbackData(callbackData);
-                    getToken();
+                    await getToken();
                 }
             }
 
-        } else Swal.fire({
+        } else await Swal.fire({
             icon: 'error',
             title: "获取秘钥失败: " + response_data.text,
             showConfirmButton: true,
             timer: 1000
         });
     } catch (error) {
-        Swal.fire({
+        await Swal.fire({
             icon: 'error',
             title: '获取秘钥失败: ' + error,
             showConfirmButton: true,

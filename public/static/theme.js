@@ -9,5 +9,4 @@ function toggleTheme() {
 (function () {
     const hour = new Date().getHours();
     if (hour < 6 || hour >= 18) document.documentElement.setAttribute("data-theme", "dark");
-    getToken();
 })();

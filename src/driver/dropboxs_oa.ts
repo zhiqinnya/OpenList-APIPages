@@ -1,9 +1,9 @@
 import {Context} from "hono";
-import {pubLogin} from "./shares/oauthv2"
-import * as configs from "./shares/configs";
-import {getCookie, setCookie} from "./shares/request";
-import {pubParse} from "./shares/urlback";
-import {pubRenew} from "./shares/refresh";
+import {pubLogin} from "../shares/oauthv2"
+import * as configs from "../shares/configs";
+import {getCookie, setCookie} from "../shares/request";
+import {pubParse} from "../shares/urlback";
+import {pubRenew} from "../shares/refresh";
 
 const driver_map: string[] = [
     "https://www.dropbox.com/oauth2/authorize",
@@ -38,7 +38,7 @@ export async function urlParse(c: Context) {
         code: login_data,
         redirect_uri: 'https://' + c.env.MAIN_URLS + '/dropboxs/callback',
     };
-    return await pubParse(c, params_info, driver_map[1], "POST");
+    return await pubParse(c, clients_info, params_info, driver_map[1], "POST");
 }
 
 // 刷新令牌 ##############################################################################

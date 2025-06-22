@@ -1,7 +1,7 @@
 import {Context} from "hono";
 import * as local from "hono/cookie";
-import * as configs from "./shares/configs";
-import * as refresh from "./shares/refresh";
+import * as configs from "../shares/configs";
+import * as refresh from "../shares/refresh";
 
 const driver_map = [
     'https://openapi.aliyundrive.com/oauth/authorize/qrcode',

@@ -1,9 +1,9 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
-import {showErr} from "./error";
-import * as configs from "./shares/configs";
-import * as refresh from "./shares/refresh";
-import {encodeCallbackData} from "./shares/callback-data";
+import {showErr} from "../shares/message";
+import * as configs from "../shares/configs";
+import * as refresh from "../shares/refresh";
+import {encodeCallbackData, Secrets} from "../shares/secrets";
 
 
 const driver_map: string[] = [
@@ -103,7 +103,7 @@ export async function oneToken(c: Context) {
         local.deleteCookie(c, 'server_use');
         let json: Record<string, any> = await response.json();
         if (json.state == 1) {
-            const callbackData: CallbackData  = {
+            const callbackData: Secrets = {
                 access_token: json.data.access_token,
                 refresh_token: json.data.refresh_token,
                 client_uid: client_uid,
@@ -128,7 +128,7 @@ export async function genToken(c: Context) {
         refresh_token: refresh_text
     };
     return await refresh.pubRenew(c, driver_map[2], params, "POST",
-        "data.access_token","data.refresh_token","error");
+        "data.access_token", "data.refresh_token", "error");
 }
 
 function getRandomString(length: number): string {

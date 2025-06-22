@@ -1,6 +1,8 @@
 // 登录申请 ##############################################################################
 import {Context} from "hono";
 import {Requests} from "./request";
+import {encodeCallbackData, Secrets} from "./secrets"
+import * as configs from "./configs";
 
 export interface Results {
     access_token: string,
@@ -9,6 +11,7 @@ export interface Results {
 }
 
 export async function pubParse(c: Context,
+                               Client: configs.Clients,
                                Params: Record<string, string>,
                                APIUrl: string = "/api/login",
                                Method: string = "GET",
@@ -18,19 +21,22 @@ export async function pubParse(c: Context,
 ): Promise<any> {
     // 请求参数 ==========================================================================
     const result_json: Record<string, any> = await Requests(c, Params, APIUrl, Method)
-    let result_data: Results = {access_token: "", message_err: "", refresh_token: ""};
-    console.log(result_json)
+    let result_data: Secrets = {
+        access_token: "",
+        message_err: "",
+        refresh_token: "",
+        client_uid: Client.app_uid,
+        client_key: Client.app_key,
+        secret_key: Client.secrets,
+        driver_txt: Client.drivers,
+        server_use: Client.servers ? "true" : "false",
+    };
     if (result_json[error_name]) result_data.message_err = result_json[error_name]
     if (result_json[access_name] || result_json[refresh_name]) {
         result_data.access_token = result_json[access_name] ? result_json[access_name] : ""
         result_data.refresh_token = result_json[refresh_name] ? result_json[refresh_name] : ""
     }
-    const parma_url = new URL("/", 'http://127.0.0.1:8787');
-    // const parma_url = new URL("/", 'https://' + c.env.MAIN_URLS);
-    Object.keys(result_data).forEach(key => {
-        (parma_url).searchParams.append(key, result_data[key]);
-    });
-    return c.redirect(parma_url.href, 302)
+    return c.redirect("/#" + encodeCallbackData(result_data));
 }
 
 

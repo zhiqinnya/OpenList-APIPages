@@ -1,9 +1,9 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
-import {showErr} from "./error";
-import * as refresh from "./shares/refresh"
-import * as configs from "./shares/configs"
-import {encodeCallbackData} from "./shares/callback-data";
+import {showErr} from "../shares/message";
+import * as refresh from "../shares/refresh"
+import * as configs from "../shares/configs"
+import {encodeCallbackData, Secrets} from "../shares/secrets";
 
 const driver_map: string[] = [
     "https://openapi.baidu.com/oauth/2.0/authorize",
@@ -103,7 +103,7 @@ export async function oneToken(c: Context) {
         local.deleteCookie(c, 'server_use');
         const json: Record<string, any> = await response.json();
         if (response.ok) {
-            const callbackData: CallbackData = {
+            const callbackData: Secrets = {
                 access_token: json.access_token,
                 refresh_token: json.refresh_token,
                 client_key: client_key,

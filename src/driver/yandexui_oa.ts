@@ -1,9 +1,9 @@
 import {Context} from "hono";
-import {showErr} from "./error";
+import {showErr} from "../shares/message";
 import * as local from "hono/cookie";
-import * as refresh from "./shares/refresh"
-import * as configs from "./shares/configs"
-import {encodeCallbackData} from "./shares/callback-data";
+import * as refresh from "../shares/refresh"
+import * as configs from "../shares/configs"
+import {encodeCallbackData, Secrets} from "../shares/secrets";
 
 interface Token {
     token_type?: string;
@@ -96,7 +96,7 @@ export async function yandexCallBack(c: Context) {
             local.deleteCookie(c, 'client_uid');
             local.deleteCookie(c, 'client_key');
 
-            const callbackData: CallbackData = {
+            const callbackData: Secrets = {
                 access_token: token.access_token,
                 refresh_token: token.refresh_token,
                 client_uid: client_uid,

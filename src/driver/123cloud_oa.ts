@@ -1,5 +1,8 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
+import {setCookie} from "../shares/request";
+import {pubLogin} from "../shares/oauthv2";
+import * as configs from "../shares/configs";
 
 
 const driver_map: string[] = [
@@ -9,6 +12,17 @@ const driver_map: string[] = [
 
 // 登录申请 ##############################################################################
 export async function oneLogin(c: Context) {
+    const clients_info: configs.Clients | undefined = configs.getInfo(c);
+    if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
+    const params_info: Record<string, any> = {
+        client_id: clients_info.app_uid,
+        clientSecret: clients_info.app_uid,
+    };
+    if (!clients_info.servers)
+        setCookie(c, clients_info)
+    return await pubLogin(c, params_info, driver_map[0], true);
+
+
     const client_uid: string = <string>c.req.query('client_uid');
     const client_key: string = <string>c.req.query('client_key');
     const driver_txt: string = <string>c.req.query('driver_txt');
@@ -17,8 +31,7 @@ export async function oneLogin(c: Context) {
         return c.json({text: "参数缺少"}, 500);
     // 请求参数 ==========================================================================
     const params_all: Record<string, any> = {
-        client_id: client_uid,
-        clientSecret: client_key,
+
     };
     // 执行请求 ===========================================================================
     try {
