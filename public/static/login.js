@@ -88,9 +88,10 @@ async function getLogin(refresh = false) {
         }
         // 申请登录模式 ================================================================
         if (response.status === 200) {
-            if (driver_pre === "onedrive" || driver_pre === "115cloud"
+            if (driver_txt === "baiduyun_go"
+                || driver_pre === "onedrive" || driver_pre === "115cloud"
                 || driver_pre === "googleui" || driver_pre === "yandexui"
-                || driver_txt === "baiduyun_go"
+                || driver_pre === "dropboxs"
             ) {
                 window.location.href = response_data.text;
             }

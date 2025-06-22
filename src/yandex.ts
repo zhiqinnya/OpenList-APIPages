@@ -125,6 +125,6 @@ export async function genToken(c: Context) {
         client_id: clients_info.servers ? c.env.alicloud_uid : clients_info.app_uid,
         client_secret: clients_info.servers ? c.env.alicloud_key : clients_info.app_key,
     };
-    return await refresh.genToken(c, "https://oauth.yandex.com/token", params, "POST",
+    return await refresh.pubRenew(c, "https://oauth.yandex.com/token", params, "POST",
         "data.access_token", "data.refresh_token", "error");
 }

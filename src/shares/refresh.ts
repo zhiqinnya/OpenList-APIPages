@@ -1,7 +1,8 @@
 // 登录申请 ##############################################################################
 import {Context} from "hono";
+import {Requests} from "./request";
 
-export async function genToken(c: Context,
+export async function pubRenew(c: Context,
                                APIUrl: string,
                                Params: Record<string, string>,
                                Method: string = "GET",
@@ -10,32 +11,15 @@ export async function genToken(c: Context,
                                error_name: string = "error_description"
 ): Promise<any> {
     // 请求参数 ==========================================================================
-    const parma_str = new URLSearchParams(Params).toString();
-    const parma_url = new URL(APIUrl);
-    Object.keys(Params).forEach(key => {
-        parma_url.searchParams.append(key, Params[key]);
-    });
-    try { // 执行请求 =====================================================================
-        const header_data = {'Content-Type': 'application/x-www-form-urlencoded'}
-        const result_data: Response = await fetch(
-            Method == "GET" ? parma_url.href : APIUrl, {
-                method: Method,
-                body: Method == "GET" ? undefined : parma_str,
-                headers: Method == "GET" ? undefined : header_data
-            }
-        );
-        const result_json: Record<string, any> = await result_data.json();
-        console.log(result_json);
-        if (getDynamicValue(result_json, refresh_name, Params.refresh_token))
-            return c.json({
-                refresh_token: getDynamicValue(result_json, refresh_name, Params.refresh_token),
-                access_token: getDynamicValue(result_json, access_name, ""),
-            }, 200);
-        return c.json({text: result_json[error_name]}, 500);
-    } catch (error) {
-        console.log(error);
-        return c.json({text: error}, 500);
-    }
+    const result_json: Record<string, any> = await Requests(c, Params, APIUrl, Method)
+    if (result_json.text) return c.json(result_json, 500)
+    if (getDynamicValue(result_json, access_name, Params.access_token))
+        return c.json({
+            refresh_token: getDynamicValue(result_json, refresh_name, Params.refresh_token),
+            access_token: getDynamicValue(result_json, access_name, ""),
+        }, 200);
+    console.log(result_json)
+    return c.json({text: result_json[error_name]}, 500);
 }
 
 function getDynamicValue(resultJson: Record<string, any>, path: string, origin_text: any): any {

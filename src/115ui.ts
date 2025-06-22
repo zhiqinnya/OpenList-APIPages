@@ -120,7 +120,7 @@ export async function genToken(c: Context) {
     const params: Record<string, any> = {
         refresh_token: refresh_text
     };
-    return await refresh.genToken(c, driver_map[2], params, "POST",
+    return await refresh.pubRenew(c, driver_map[2], params, "POST",
         "data.access_token","data.refresh_token","error");
 }
 
