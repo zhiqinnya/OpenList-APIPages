@@ -145,9 +145,12 @@ async function getLogin(refresh = false) {
                         access_token: auth_data.access_token,
                         refresh_token: auth_data.refresh_token,
                         client_uid: client_uid,
-                        client_key: client_key
+                        client_key: client_key,
+                        driver_txt: driver_txt,
+                        server_use: server_use ? "true" : "false",
                     };
-                    window.location.hash = "#" + encodeCallbackData(callbackData);
+                    window.location.href = "/#" + encodeCallbackData(callbackData);
+                    location.reload();
                     await getToken();
                 }
             }
