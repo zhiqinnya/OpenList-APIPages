@@ -18,8 +18,8 @@
 <div class="container form-container">
     <h2 class="text-center mb-4">🔐 OpenList Token 获取工具</h2>
     <div class="mb-3">
-        <label for="site-select" class="form-label">网盘名称</label>
-        <select id="site-select" class="form-select">
+        <label for="driver-txt-input" class="form-label">网盘名称</label>
+        <select id="driver-txt-input" class="form-select">
             <option value="onedrive_go" selected>OneDrive 企业账号</option>
             <option value="onedrive_pr">OneDrive 个人账号</option>
             <option value="onedrive_cn">OneDrive 世纪互联</option>
@@ -31,34 +31,36 @@
             <option value="baiduyun_ob">百度网盘 OOB 验证</option>
             <option value="115cloud_go">115 网盘 验证登录</option>
             <option value="123cloud_go">123 网盘 直接登录</option>
+            <option value="dropboxs_go">Drop Box 用户登录</option>
             <option value="googleui_go">GoogleDrive Login</option>
             <option value="yandexui_go">YandexDrive Login</option>
+
         </select>
     </div>
 
     <div class="mb-3" style="margin-top: 15px">
-        <input type="checkbox" id="server_use" class="form-check-input">
-        <label for="server_use" class="form-check-label">使用 OpenList 提供的参数</label>
+        <input type="checkbox" id="server-use-input" class="form-check-input">
+        <label for="server-use-input" class="form-check-label">使用 OpenList 提供的参数</label>
     </div>
 
-    <div class="mb-3" id="client-id-view">
-        <label for="client-id" class="form-label">客户端ID（ClientID/AppID）</label>
-        <input type="text" id="client-id" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label for="app-secret" class="form-label">应用秘钥 (AppKey/Secret)</label>
-        <input type="text" id="app-secret" class="form-control">
-    </div>
-
-    <div class="mb-3" id="secret-key-view">
-        <label for="secret-key" class="form-label">访问秘钥（SecretKey/Key）</label>
-        <input type="text" id="secret-key" class="form-control">
+    <div class="mb-3" id="client-uid-views">
+        <label for="client-uid-input" class="form-label">客户端ID（ClientID/AppID）</label>
+        <input type="text" id="client-uid-input" class="form-control">
     </div>
 
     <div class="mb-3">
-        <label for="callback-url" class="form-label">回调地址（Callback URL）</label>
-        <input type="text" id="callback-url" class="form-control" value="https://api.oplist.org/onedrive/callback"
+        <label for="client-key-input" class="form-label">应用秘钥 (AppKey/Secret)</label>
+        <input type="text" id="client-key-input" class="form-control">
+    </div>
+
+    <div class="mb-3" id="secret-key-views">
+        <label for="secret-key-input" class="form-label">访问秘钥（SecretKey/Key）</label>
+        <input type="text" id="secret-key-input" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="direct-url-input" class="form-label">回调地址（Callback URL）</label>
+        <input type="text" id="direct-url-input" class="form-control" value="https://api.oplist.org/onedrive/callback"
                readonly onclick="autoCopy(this)">
     </div>
 
@@ -111,11 +113,14 @@
         </div>
         <div id="qr-status" class="qr-status" style="display: none;"></div>
         <div class="mt-3">
-            <button id="refresh-qr-btn" class="btn btn-secondary" onclick="refreshQRCode()" style="display: none;">刷新二维码</button>
+            <button id="refresh-qr-btn" class="btn btn-secondary" onclick="refreshQRCode()" style="display: none;">
+                刷新二维码
+            </button>
             <button class="btn btn-secondary" onclick="closeQRModal()">关闭</button>
         </div>
     </div>
 </div>
+<script src="/static/event.js"></script>
 <script src="/static/login.js"></script>
 <script src="/static/token.js"></script>
 <script src="/static/theme.js"></script>
@@ -123,6 +128,19 @@
 <script src="/static/spoid.js"></script>
 <script src="/static/input.js"></script>
 <script>
+    // 获取select元素和输入框元素
+    const driver_txt_input = document.getElementById('driver-txt-input');
+    const direct_url_input = document.getElementById('direct-url-input');
+    const client_uid_input = document.getElementById('client-uid-input');
+    const client_uid_views = document.getElementById('client-uid-views');
+    const client_key_input = document.getElementById('client-key-input');
+    const secret_key_input = document.getElementById('secret-key-input');
+    const server_use_input = document.getElementById('server-use-input');
+    const secret_key_views = document.getElementById('secret-key-views');
+    const shared_url_views = document.getElementById('sharepoint-url-view')
+    const shared_btn_views = document.getElementById('sharepoint-btn-view');
+    const shared_uid_views = document.getElementById('sharepoint-uid-view');
+    const url_hash = window.location.hash.substring(1); // 去掉地址栏上的#号
     getToken();
     // 阿里云盘扫码v2相关变量
     let alicloud2SessionId = null;
@@ -136,6 +154,10 @@
             closeQRModal();
         }
     }
+    // // 页面加载时初始化回调地址
+    // window.onload = function () {
+    //     driver_txt_input.dispatchEvent(new Event('change'));
+    // };
 </script>
 </body>
 </html>

@@ -4,16 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="mod driver_txt">
+    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="add dropbox api&#10;mod all driver's name&#10;mod oauth2 function">
+      <change afterPath="$PROJECT_DIR$/public/static/event.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/aliv2.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/aliv2.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/static/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/tests.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/115ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/115ui.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/123ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/123ui.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/aliui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/aliui.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/baidu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/baidu.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/goapi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/goapi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/oneui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/oneui.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/spoid.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/spoid.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/theme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/static/token.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/token.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/115ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/115cloud_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/123ui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/123cloud_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aliui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/alicloud_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aliui2.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/alicloud_qr.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/baidu.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/baiduyun_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/drops.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/dropboxs_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/error.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shares/message.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/goapi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/googleui_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/oneui.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/onedrive_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shares/callback-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shares/secrets.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shares/refresh.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shares/refresh.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/shares/urlback.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/shares/urlback.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/callback-data.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/yandex.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/yandexui_oa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wrangler.jsonc.example" beforeDir="false" afterPath="$PROJECT_DIR$/wrangler.jsonc.example" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,8 +85,8 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.language.and.region&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\pikachuren\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -80,16 +97,20 @@
       <recent name="G:\AList\cf-worker-api\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Codes\CFWorker-api\public\static" />
+      <recent name="D:\Codes\CFWorker-api\src\driver" />
+      <recent name="D:\Codes\CFWorker-api\src\shares" />
       <recent name="G:\AList\cf-worker-api\public" />
     </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-WS-251.26094.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-WS-243.23654.120" />
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="" />
@@ -102,6 +123,7 @@
       <workItem from="1749696801474" duration="20247000" />
       <workItem from="1749729820615" duration="1140000" />
       <workItem from="1750212996387" duration="18410000" />
+      <workItem from="1750583575965" duration="5130000" />
     </task>
     <task id="LOCAL-00001" summary="fin onedrive official token">
       <option name="closed" value="true" />
@@ -247,7 +269,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750335161602</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="add dropbox">
+      <option name="closed" value="true" />
+      <created>1750577507090</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1750577507090</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -268,22 +298,17 @@
     <MESSAGE value="fix baiduyun costumer client id error" />
     <MESSAGE value="add aliyun open" />
     <MESSAGE value="mod driver_txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="mod driver_txt" />
+    <MESSAGE value="add dropbox" />
+    <MESSAGE value="add dropbox api&#10;mod all driver's name&#10;mod oauth2 function" />
+    <option name="LAST_COMMIT_MESSAGE" value="add dropbox api&#10;mod all driver's name&#10;mod oauth2 function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/public/static/token.js</url>
-          <line>112</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/public/static/login.js</url>
-          <line>23</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/src/driver/onedrive_oa.ts</url>
+          <line>130</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

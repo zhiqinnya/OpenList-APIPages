@@ -3,9 +3,9 @@ function getSiteID() {
     const siteUrl = document.getElementById("sharepoint-url").value.trim();
     const access_token = document.getElementById("access-token").value.trim();
     const refresh_token = document.getElementById("refresh-token").value.trim();
-    const client_uid = document.getElementById("client-id").value.trim();
-    const client_key = document.getElementById("app-secret").value.trim();
-    const site_type = document.getElementById("site-select").value;
+    const client_uid = document.getElementById("client-uid-input").value.trim();
+    const client_key = document.getElementById("client-key-input").value.trim();
+    const site_type = document.getElementById("driver-txt-input").value;
     const idElement = document.getElementById("sharepoint-id");
 
     // 定义站点的API Endpoint

@@ -1,11 +1,11 @@
 import {Context} from "hono";
 
 export interface Clients {
-    app_uid: string,
-    app_key: string,
-    secrets: string,
-    drivers: string,
-    servers: boolean,
+    app_uid: string | undefined,
+    app_key: string | undefined,
+    secrets: string | undefined,
+    drivers: string | undefined,
+    servers: boolean | undefined,
 }
 
 export function getInfo(c: Context): Clients | undefined {

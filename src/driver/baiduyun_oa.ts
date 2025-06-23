@@ -1,8 +1,9 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
-import {showErr} from "./error";
-import * as refresh from "./shares/refresh"
-import * as configs from "./shares/configs"
+import {showErr} from "../shares/message";
+import * as refresh from "../shares/refresh"
+import * as configs from "../shares/configs"
+import {encodeCallbackData, Secrets} from "../shares/secrets";
 
 const driver_map: string[] = [
     "https://openapi.baidu.com/oauth/2.0/authorize",
@@ -17,7 +18,6 @@ export async function oneLogin(c: Context) {
     const driver_txt: string = <string>c.req.query('driver_txt');
     const server_use: string = <string>c.req.query('server_use');
     const redirector: string = 'https://' + c.env.MAIN_URLS + '/baiduyun/callback'
-    console.log(driver_txt, client_key, secret_key)
     if (server_use == "false")
         if (!driver_txt || !client_key || !secret_key)
             return c.json({text: "参数缺少"}, 500);
@@ -43,7 +43,6 @@ export async function oneLogin(c: Context) {
         }
         local.setCookie(c, 'driver_txt', driver_txt);
         local.setCookie(c, 'server_use', server_use);
-        console.log(response.url);
         return c.json({text: response.url}, 200);
     } catch (error) {
         return c.json({text: error}, 500);
@@ -81,7 +80,12 @@ export async function oneToken(c: Context) {
     } catch (error) {
         return c.redirect(showErr(<string>error, "", ""));
     }
-    // console.log(login_data);
+
+    // 避免key泄漏
+    if (server_use == "true") {
+        client_key = "";
+        secret_key = "";
+    }
 
     // 执行请求 ===========================================================================
     try {
@@ -98,15 +102,15 @@ export async function oneToken(c: Context) {
         local.deleteCookie(c, 'driver_txt');
         local.deleteCookie(c, 'server_use');
         const json: Record<string, any> = await response.json();
-        console.log(response, json);
         if (response.ok) {
-            return c.redirect(
-                `/?access_token=${json.access_token}`
-                + `&refresh_token=${json.refresh_token}`
-                + `&client_key=${server_use == "true" ? "" : client_key}`
-                + `&secret_key=${server_use == "true" ? "" : secret_key}`
-                + `&driver_txt=${driver_txt}`
-            );
+            const callbackData: Secrets = {
+                access_token: json.access_token,
+                refresh_token: json.refresh_token,
+                client_key: client_key,
+                secret_key: secret_key,
+                driver_txt: driver_txt,
+            };
+            return c.redirect("/#" + encodeCallbackData(callbackData));
         }
         return c.redirect(showErr(json.error_description, "", client_key));
     } catch (error) {
@@ -127,6 +131,6 @@ export async function genToken(c: Context) {
         grant_type: 'refresh_token',
         refresh_token: refresh_text
     };
-    return await refresh.genToken(c, driver_map[1], params, "GET");
+    return await refresh.pubRenew(c, driver_map[1], params, "GET");
 }
 

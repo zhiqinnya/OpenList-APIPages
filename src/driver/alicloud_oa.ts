@@ -1,7 +1,7 @@
 import {Context} from "hono";
 import * as local from "hono/cookie";
-import * as configs from "./shares/configs";
-import * as refresh from "./shares/refresh";
+import * as configs from "../shares/configs";
+import * as refresh from "../shares/refresh";
 
 const driver_map = [
     'https://openapi.aliyundrive.com/oauth/authorize/qrcode',
@@ -55,7 +55,6 @@ export async function alyLogin(c: Context) {
         local.setCookie(c, 'driver_txt', driver_txt);
         local.setCookie(c, 'server_use', server_use);
         const data: Record<string, any> = await response.json();
-        console.log(data);
         return c.json({
             "text": data.qrCodeUrl,
             "sid": data.sid
@@ -106,7 +105,6 @@ export async function alyToken(c: Context) {
             return c.json({text: `${error.code}: ${error.message}`,}, 403);
         }
         const data: Record<string, any> = await response.json();
-        console.log(data);
         return c.json(data);
     } catch (error) {
         return c.json({text: error}, 500
@@ -127,6 +125,6 @@ export async function genToken(c: Context) {
         grant_type: 'refresh_token',
         refresh_token: refresh_text
     };
-    return await refresh.genToken(c, driver_map[1], params, "POST",
+    return await refresh.pubRenew(c, driver_map[1], params, "POST",
         "access_token", "refresh_token", "message");
 }

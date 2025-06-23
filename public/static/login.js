@@ -1,13 +1,14 @@
+// import Swal from 'sweetalert2';
+
 // 获取登录秘钥 #######################################################
 async function getLogin(refresh = false) {
-    let server_use = document.getElementById("server_use").checked;
-    let secret_key = document.getElementById("secret-key").value;
-    let client_uid = document.getElementById("client-id").value;
-    let client_key = document.getElementById("app-secret").value;
-    let driver_txt = document.getElementById("site-select").value;
+    let server_use = document.getElementById("server-use-input").checked;
+    let secret_key = document.getElementById("secret-key-input").value;
+    let client_uid = document.getElementById("client-uid-input").value;
+    let client_key = document.getElementById("client-key-input").value;
+    let driver_txt = document.getElementById("driver-txt-input").value;
     let refresh_ui = document.getElementById("refresh-token").value;
     let driver_pre = driver_txt.split("_")[0]
-    console.log(server_use);
     let check_flag = true;
     // 验证秘钥情况 ==================================================
     if (!server_use) {
@@ -37,7 +38,7 @@ async function getLogin(refresh = false) {
     let base_urls = "/requests?client_uid="
     if (refresh) {
         if (!refresh_ui) {
-            Swal.fire({
+            await Swal.fire({
                 position: 'top',
                 icon: 'info',
                 title: '刷新失败',
@@ -67,19 +68,19 @@ async function getLogin(refresh = false) {
         // 刷新令牌模式 ===============================================
         if (refresh) {
             if (response.status === 200) {
-                access_key = document.getElementById("access-token")
+                const access_key = document.getElementById("access-token")
                 access_key.value = response_data.access_token;
                 refresh_ui = document.getElementById("refresh-token")
                 refresh_ui.value = response_data.refresh_token;
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
-                    title: '刷新令牌成功:',
+                    title: '刷新令牌成功',
                     showConfirmButton: true,
                     timer: 1000
                 });
-            } else Swal.fire({
+            } else await Swal.fire({
                 icon: 'error',
-                title: '刷新令牌失败: ',
+                title: '刷新令牌失败',
                 text: response_data.text,
                 showConfirmButton: true,
                 timer: 1000
@@ -88,9 +89,10 @@ async function getLogin(refresh = false) {
         }
         // 申请登录模式 ================================================================
         if (response.status === 200) {
-            if (driver_pre === "onedrive" || driver_pre === "115cloud"
+            if (driver_txt === "baiduyun_go"
+                || driver_pre === "onedrive" || driver_pre === "115cloud"
                 || driver_pre === "googleui" || driver_pre === "yandexui"
-                || driver_txt === "baiduyun_go"
+                || driver_pre === "dropboxs"
             ) {
                 window.location.href = response_data.text;
             }
@@ -101,7 +103,7 @@ async function getLogin(refresh = false) {
                     title: '提示',
                     html: '请在新打开的页面获取授权码并粘贴到下方：' +
                         '<input id="authCodeInput" type="text"' +
-                        'style="margin-top: 10px; width: calc(100% - 20px);">',
+                        ' style="margin-top: 10px; width: calc(100% - 20px);">',
                     confirmButtonText: 'OK',
                     preConfirm: () => {
                         return document.getElementById('authCodeInput').value;
@@ -109,7 +111,6 @@ async function getLogin(refresh = false) {
                 }).then(async (result) => {
                     if (result.isConfirmed) {
                         const authCode = result.value;
-                        console.log('授权码:', authCode);
                         window.location.href = "/baiduyun/callback" +
                             "?server_oob=true" + "&secret_key=" + secret_key +
                             "&client_key=" + client_key + "&code=" + authCode;
@@ -140,25 +141,33 @@ async function getLogin(refresh = false) {
                 let auth_post = await fetch(post_urls, {method: 'GET'});
                 let auth_data = await auth_post.json();
                 if (auth_post.status === 200) {
-                    window.location.href = `/?access_token=${auth_data.access_token}`
-                        + `&refresh_token=${auth_data.refresh_token}`
-                        + `&client_uid=${client_uid}`
-                        + `&client_key=${client_key}`;
+                    const callbackData = {
+                        access_token: auth_data.access_token,
+                        refresh_token: auth_data.refresh_token,
+                        client_uid: client_uid,
+                        client_key: client_key
+                    };
+                    window.location.hash = "#" + encodeCallbackData(callbackData);
+                    await getToken();
                 }
             }
 
-        } else Swal.fire({
+        } else await Swal.fire({
             icon: 'error',
             title: "获取秘钥失败: " + response_data.text,
             showConfirmButton: true,
             timer: 1000
         });
     } catch (error) {
-        Swal.fire({
+        await Swal.fire({
             icon: 'error',
             title: '获取秘钥失败: ' + error,
             showConfirmButton: true,
             timer: 1000
         });
     }
+}
+
+function encodeCallbackData(data) {
+    return btoa(JSON.stringify(data))
 }

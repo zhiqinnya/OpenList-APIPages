@@ -1,7 +1,8 @@
 // 登录申请 ##############################################################################
 import {Context} from "hono";
+import {Requests} from "./request";
 
-export async function genToken(c: Context,
+export async function pubRenew(c: Context,
                                APIUrl: string,
                                Params: Record<string, string>,
                                Method: string = "GET",
@@ -25,7 +26,6 @@ export async function genToken(c: Context,
             }
         );
         const result_json: Record<string, any> = await result_data.json();
-        console.log(result_json);
         if (getDynamicValue(result_json, refresh_name, Params.refresh_token))
             return c.json({
                 refresh_token: getDynamicValue(result_json, refresh_name, Params.refresh_token),
@@ -33,7 +33,7 @@ export async function genToken(c: Context,
             }, 200);
         return c.json({text: result_json[error_name]}, 500);
     } catch (error) {
-        console.log(error);
+        // console.error("刷新token失败", error);
         return c.json({text: error}, 500);
     }
 }
