@@ -25,7 +25,7 @@ export type Bindings = {
     dropboxs_uid: string, dropboxs_key: string,
 }
 
-const app = new Hono<{ Bindings: Bindings }>()
+export const app = new Hono<{ Bindings: Bindings }>()
 app.use("*", serveStatic({manifest: manifest, root: "./"}));
 // 登录申请 ##############################################################################
 app.get('/dropboxs/requests', async (c) => {
