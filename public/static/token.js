@@ -21,12 +21,18 @@ async function getToken() {
             window.location.replace('#');
 
             // 设置数据 ========================================================
-            document.getElementById("driver-txt-input").value = driver_txt;
-            document.getElementById("client-key-input").value = client_key;
-            document.getElementById("client-uid-input").value = client_uid;
-            document.getElementById("secret-key-input").value = secret_key;
-            document.getElementById("access-token").value = access_key;
-            document.getElementById("refresh-token").value = refresh_ui;
+            if (driver_txt && driver_txt !== "undefined")
+                document.getElementById("driver-txt-input").value = driver_txt;
+            if (client_key && client_key !== "undefined")
+                document.getElementById("client-key-input").value = client_key;
+            if (client_uid && client_uid !== "undefined")
+                document.getElementById("client-uid-input").value = client_uid;
+            if (secret_key && secret_key !== "undefined")
+                document.getElementById("secret-key-input").value = secret_key;
+            if (access_key && access_key !== "undefined")
+                document.getElementById("access-token").value = access_key;
+            if (refresh_ui && refresh_ui !== "undefined")
+                document.getElementById("refresh-token").value = refresh_ui;
             if (server_use && server_use === "true")
                 document.getElementById("server-use-input").checked = true;
             if (!driver_txt || driver_txt === "")
@@ -44,5 +50,6 @@ async function getToken() {
             console.error(e);
         }
     }
-    addEventListener()
+    addEventListener();
+    onSelect();
 }

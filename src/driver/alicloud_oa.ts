@@ -2,9 +2,12 @@ import {Context} from "hono";
 import * as local from "hono/cookie";
 import * as configs from "../shares/configs";
 import * as refresh from "../shares/refresh";
+import {getCookie, setCookie} from "../shares/request";
+import {pubLogin} from "../shares/oauthv2";
+import {encodeCallbackData, Secrets} from "../shares/secrets";
 
 const driver_map = [
-    'https://openapi.aliyundrive.com/oauth/authorize/qrcode',
+    'https://openapi.aliyundrive.com/oauth/authorize',
     'https://openapi.aliyundrive.com/oauth/access_token',
     'https://openapi.aliyundrive.com/oauth/qrcode',
 ]
@@ -31,57 +34,59 @@ interface AliQrcodeReq {
 
 // 登录申请 ##############################################################################
 export async function alyLogin(c: Context) {
-    try {
-        const client_uid: string = <string>c.req.query('client_uid');
-        const client_key: string = <string>c.req.query('client_key');
-        const driver_txt: string = <string>c.req.query('driver_txt');
-        const server_use: string = <string>c.req.query('server_use');
-        if (server_use == "false" && (!driver_txt || !client_uid || !client_key))
-            return c.json({text: "参数缺少"}, 500);
-        const req: AliQrcodeReq = {
-            client_id: server_use == "true" ? c.env.alicloud_uid : client_uid,
-            client_secret: server_use == "true" ? c.env.alicloud_key : client_key,
-            scopes: ['user:base', 'file:all:read', 'file:all:write']
-        }
-        const response = await fetch(driver_map[0], {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(req),
-        });
-        if (!response.ok) {
-            const error: AliAccessTokenErr = await response.json();
-            return c.json({text: `${error.code}: ${error.message}`}, 403);
-        }
-        local.setCookie(c, 'driver_txt', driver_txt);
-        local.setCookie(c, 'server_use', server_use);
-        const data: Record<string, any> = await response.json();
-        return c.json({
-            "text": data.qrCodeUrl,
-            "sid": data.sid
-        }, 200);
-    } catch (error) {
-        return c.json({text: error}, 500);
+    const clients: configs.Clients | undefined = configs.getInfo(c);
+    if (!clients) return c.json({text: "传入参数缺少"}, 500);
+    const client_secret = clients.servers ? c.env.alicloud_key : clients.servers
+    let request_urls: string = driver_map[0]
+    // 通用参数 =========================================================================
+    const params_info: Record<string, any> = {
+        client_id: clients.servers ? c.env.alicloud_uid : clients.app_uid,
     }
+    // QR扫码需要增加的参数 =============================================================
+    if (clients.drivers == "alicloud_go") {
+        params_info.redirect_uri = 'https://' + c.env.MAIN_URLS + '/alicloud/callback'
+        params_info.response_type = 'code'
+        params_info.scope = ['user:base', 'file:all:read', 'file:all:write']
+    } else {
+        request_urls += "/qrcode"
+        params_info.client_secret = client_secret
+        params_info.scopes = ['user:base', 'file:all:read', 'file:all:write']
+    }
+    //需要保存数据到浏览器本地 ==========================================================
+    setCookie(c, clients)
+    // 执行请求 =========================================================================
+    if (clients.drivers == "alicloud_go") {
+        return await pubLogin(c, params_info, request_urls,
+            true, "GET");
+    }
+    const result = await pubLogin(c, JSON.stringify(params_info), request_urls,
+        false, "POST", "json",
+        {'Content-Type': 'application/json'});
+    return c.json({"text": result.qrCodeUrl, "sid": result.sid}, 200);
 }
 
 
 // 令牌申请 ##############################################################################
 export async function alyToken(c: Context) {
-    let server_use: string = <string>local.getCookie(c, 'server_use')
+    const clients_info: configs.Clients = getCookie(c);
+    let oauth_type: string | undefined = c.req.query('grant_type')
+    if (!clients_info.servers) clients_info.servers = c.req.query('server_use') == "true"
+    if (!clients_info.drivers) return c.json({text: 'No Cookies',}, 401);
+    if (!oauth_type) oauth_type = "authorization_code";
     const req: AliAccessTokenReq = {
-        client_id: server_use == "true" ? c.env.alicloud_uid : <string>c.req.query('client_id'),
-        client_secret: server_use == "true" ? c.env.alicloud_key : <string>c.req.query('client_secret'),
-        grant_type: <string>c.req.query('grant_type'),
+        client_id: clients_info.servers  ? c.env.alicloud_uid : <string>c.req.query('client_id'),
+        client_secret: clients_info.servers ? c.env.alicloud_key : <string>c.req.query('client_secret'),
+        grant_type: <string>oauth_type,
         code: <string>c.req.query('code'),
         refresh_token: <string>c.req.query('refresh_token')
     };
     if (req.grant_type !== 'authorization_code' && req.grant_type !== 'refresh_token')
         return c.json({text: 'Incorrect GrantType'}, 400);
-    if (req.grant_type === 'authorization_code' && !req.code)
-        return c.json({text: 'Code missed'}, 400);
     if (req.grant_type === 'refresh_token' && req.refresh_token.split('.').length !== 3)
         return c.json({text: 'Incorrect refresh_token or missed',}, 400);
-    if (req.grant_type === 'authorization_code') {
+    if (req.grant_type === 'authorization_code' && !req.code)
+        return c.json({text: 'Code missed'}, 400);
+    if (req.grant_type === 'authorization_code' && clients_info.drivers == "alicloud_qr") {
         let code_urls: string = 'https://openapi.aliyundrive.com/oauth/qrcode/' + req.code + '/status'
         let auth_post: Response = await fetch(code_urls, {method: 'GET'});
         let code_data: Record<string, string> = await auth_post.json();
@@ -105,7 +110,17 @@ export async function alyToken(c: Context) {
             return c.json({text: `${error.code}: ${error.message}`,}, 403);
         }
         const data: Record<string, any> = await response.json();
-        return c.json(data);
+        if (clients_info.drivers == "alicloud_go") {
+            const callbackData: Secrets = {
+                access_token: data.access_token,
+                refresh_token: data.refresh_token,
+                client_uid: clients_info.app_uid,
+                client_key: clients_info.app_key,
+                driver_txt: clients_info.drivers,
+                server_use: clients_info.servers,
+            }
+            return c.redirect("/#" + encodeCallbackData(callbackData));
+        } else return c.json(data);
     } catch (error) {
         return c.json({text: error}, 500
         );

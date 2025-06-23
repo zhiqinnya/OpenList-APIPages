@@ -5,7 +5,7 @@ import manifest from '__STATIC_CONTENT_MANIFEST'
 import * as local from "hono/cookie";
 import * as oneui from './driver/onedrive_oa';
 import * as aliui from './driver/alicloud_oa';
-import * as aliui2 from './driver/alicloud_qr';
+import * as aliui2 from './driver/alicloud_cs';
 import * as ui115 from './driver/115cloud_oa';
 import * as ui123 from './driver/123cloud_oa';
 import * as baidu from './driver/baiduyun_oa';

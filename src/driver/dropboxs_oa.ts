@@ -20,8 +20,7 @@ export async function getLogin(c: Context) {
         token_access_type: "offline",
         redirect_uri: 'https://' + c.env.MAIN_URLS + '/dropboxs/callback',
     };
-    if (!clients_info.servers)
-        setCookie(c, clients_info)
+    setCookie(c, clients_info)
     return await pubLogin(c, params_info, driver_map[0], true);
 }
 

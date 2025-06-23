@@ -3,19 +3,24 @@ import * as local from "hono/cookie";
 import * as configs from "./configs";
 
 export async function Requests(c: Context,
-                               Params: Record<string, string>,
+                               Params: Record<string, string> | string = "",
                                APIUrl: string = "/api/login",
                                Method: string = "GET",
                                Direct: boolean = false, // true时直接回传URL
+                               Header: Record<string, string> | undefined = undefined,
 ): Promise<any> {
     // 请求参数 ==========================================================================
-    const parma_str = new URLSearchParams(Params).toString();
+    let parma_str: Record<string, string> | string = Params
     const parma_url = new URL(APIUrl);
-    Object.keys(Params).forEach(key => {
-        parma_url.searchParams.append(key, Params[key]);
-    });
+    if (typeof Params !== "string") {
+        parma_str = new URLSearchParams(Params).toString();
+        Object.keys(Params).forEach(key => {
+            parma_url.searchParams.append(key, Params[key]);
+        });
+    }
     try { // 执行请求 =====================================================================
-        const header_data = {'Content-Type': 'application/x-www-form-urlencoded'}
+        const default_inf = {'Content-Type': 'application/x-www-form-urlencoded'}
+        const header_data: Record<string, any> = Header ? Header : default_inf
         if (Direct) return {url: Method == "GET" ? parma_url.href : APIUrl}
         const result_data: Response = await fetch(
             Method == "GET" ? parma_url.href : APIUrl, {
@@ -24,7 +29,6 @@ export async function Requests(c: Context,
                 headers: Method == "GET" ? undefined : header_data
             }
         );
-        // console.log(result_data);
         return await result_data.json()
     } catch (error) {
         return {text: error}

@@ -12,7 +12,7 @@ async function getLogin(refresh = false) {
     let check_flag = true;
     // 验证秘钥情况 ==================================================
     if (!server_use) {
-        if (driver_txt !== "alicloud_oa" && driver_pre !== "baiduyun")
+        if (driver_txt !== "alicloud_cs" && driver_pre !== "baiduyun")
             if (client_uid === "" || client_key === "")
                 check_flag = false
         if (driver_pre === "baiduyun")
@@ -30,7 +30,7 @@ async function getLogin(refresh = false) {
         }
     }
     // 阿里云盘扫码v2直接调用专用API，不需要构建传统的requests路径
-    if (driver_txt === "alicloud_oa" && !refresh) {
+    if (driver_txt === "alicloud_cs" && !refresh) {
         await startAlicloud2Login();
         return;
     }
@@ -51,7 +51,7 @@ async function getLogin(refresh = false) {
     }
 
 
-    if (driver_txt === "alicloud_oa") driver_pre = "alicloud2"
+    if (driver_txt === "alicloud_cs") driver_pre = "alicloud2"
     let post_urls = "/" + driver_pre + base_urls + client_uid
         + "&client_key=" + client_key + "&driver_txt=" + driver_txt
         + "&server_use=" + server_use
@@ -89,7 +89,7 @@ async function getLogin(refresh = false) {
         }
         // 申请登录模式 ================================================================
         if (response.status === 200) {
-            if (driver_txt === "baiduyun_go"
+            if (driver_txt === "baiduyun_go" || driver_txt === "alicloud_go"
                 || driver_pre === "onedrive" || driver_pre === "115cloud"
                 || driver_pre === "googleui" || driver_pre === "yandexui"
                 || driver_pre === "dropboxs"
@@ -136,6 +136,7 @@ async function getLogin(refresh = false) {
                 post_urls = "/alicloud/callback" +
                     "?client_id=" + client_uid +
                     "&client_secret=" + client_key +
+                    "&server_use=" + server_use +
                     "&grant_type=" + "authorization_code" +
                     "&code=" + sid
                 let auth_post = await fetch(post_urls, {method: 'GET'});
@@ -152,7 +153,13 @@ async function getLogin(refresh = false) {
                     window.location.href = "/#" + encodeCallbackData(callbackData);
                     location.reload();
                     await getToken();
-                }
+                } else await Swal.fire({
+                    position: 'top',
+                    icon: 'info',
+                    title: '登录失败',
+                    html: auth_data.text,
+                    showConfirmButton: true
+                });
             }
 
         } else await Swal.fire({
