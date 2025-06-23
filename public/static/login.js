@@ -113,6 +113,7 @@ async function getLogin(refresh = false) {
                         window.location.href = "/baiduyun/callback" +
                             "?server_oob=true" + "&secret_key=" + secret_key +
                             "&client_key=" + client_key + "&code=" + authCode;
+                        await getToken();
                     }
                 });
             }
