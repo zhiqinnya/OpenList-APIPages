@@ -3,28 +3,12 @@ function addEventListener() {
     driver_txt_input.addEventListener('change', onChange)
     // 监听切换使用官方参数情况下修改输入内容 ##################################
     server_use_input.addEventListener('change', function () {
-        if (this.checked) {
-            // 禁用输入框并清空内容
-            client_uid_input.disabled = true;
-            client_uid_input.value = '';
-            client_key_input.disabled = true;
-            client_key_input.value = '';
-            secret_key_input.disabled = true;
-            secret_key_input.value = '';
-        } else {
-            // 启用输入框
-            client_uid_input.disabled = false;
-            client_key_input.disabled = false;
-            secret_key_input.disabled = false;
-        }
+        onSelect()
     });
 }
 
 function onChange(clean = true) {
-    const selectedValue = this.value.split("_")[0]; // 获取选中的value
-    const urls = `https://api.oplist.org/${selectedValue}/callback`
     // 更新输入框的值 ======================================================
-    direct_url_input.value = urls;
     server_use_input.checked = false;
     client_key_input.value = "";
     secret_key_input.value = "";
@@ -39,6 +23,9 @@ function onSelect() {
     client_uid_input.disabled = false;
     client_uid_views.hidden = false;
     secret_key_views.hidden = true;
+    const driver_pre = driver_txt_input.value.split("_")[0];
+    direct_url_input.value = `https://api.oplist.org/${driver_pre}/callback`;
+
     // 修改一些样式 ========================================================
     const clientIdContainer = client_uid_input.closest('.mb-3');
     const appSecretContainer = client_key_input.closest('.mb-3');
@@ -50,12 +37,12 @@ function onSelect() {
         clientIdContainer.style.display = 'none';
         appSecretContainer.style.display = 'none';
         serverUseContainer.style.display = 'none';
-        //callbackContainer.style.display = 'none';
+        callbackContainer.style.display = 'none';
     } else {
         clientIdContainer.style.display = 'block';
         appSecretContainer.style.display = 'block';
         serverUseContainer.style.display = 'block';
-        //callbackContainer.style.display = 'block';
+        callbackContainer.style.display = 'block';
     }
     // Onedrive模式需要显示Share Point 相关参数 ===========================
     if (driver_txt_input.value.split("_")[0] === "onedrive") {
@@ -80,6 +67,10 @@ function onSelect() {
             direct_url_input.value = "oob";
         }
     }
+    // if (driver_txt_input.value === "quarkyun_fn") {
+    //     server_use_input.checked = true;
+    //     server_use_input.disabled = false;
+    // }
     // 禁用部分驱动使用官方参数 ===========================================
     if (driver_txt_input.value === "baiduyun_ob" ||
         driver_txt_input.value === "123cloud_go" ||
@@ -91,6 +82,21 @@ function onSelect() {
     ) {
         server_use_input.checked = false;
         server_use_input.disabled = true;
+    }
+    // 检查是否选中服务器处理 ===============================================
+    if (server_use_input.checked) {
+        // 禁用输入框并清空内容
+        client_uid_input.disabled = true;
+        client_uid_input.value = '';
+        client_key_input.disabled = true;
+        client_key_input.value = '';
+        secret_key_input.disabled = true;
+        secret_key_input.value = '';
+    } else {
+        // 启用输入框
+        client_uid_input.disabled = false;
+        client_key_input.disabled = false;
+        secret_key_input.disabled = false;
     }
     // Google弹出隐私政策和使用条款
     if (driver_txt_input.value === "googleui_go") {

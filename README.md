@@ -94,20 +94,24 @@
 
 ## 配置设置
 
-| 网盘驱动 | 区域类型 | driver   | apps_types  | client_uid | client_key    | secret_key |
-| -------- |------| -------- |-------------| ---------- | ------------- | ---------- |
-| Onedrive | 个人版本 | onedrive | onedrive_pr | 客户端ID   | 客户端秘钥    | /          |
-| Onedrive | 企业版本 | onedrive | onedrive_go | 客户端ID   | 客户端秘钥    | /          |
-| Onedrive | 世纪互联 | onedrive | onedrive_cn | 客户端ID   | 客户端秘钥    | /          |
-| Onedrive | 美国版本 | onedrive | onedrive_us | 客户端ID   | 客户端秘钥    | /          |
-| Onedrive | 德国版本 | onedrive | onedrive_de | 客户端ID   | 客户端秘钥    | /          |
-| 阿里云盘 | 扫码登录 | alicloud | alicloud_qr | APP ID     | App Secret    | /          |
-| 百度云盘 | 验证登录 | baiduyun | baiduyun_go | AppID      | AppKey        | SecretKey  |
-| 115 云盘 | 验证登录 | 115cloud | 115cloud_go | AppID      | AppSecret     | /          |
-| 123 云盘 | 验证登录 | 123cloud | 123cloud_go | client_id  | client_secret | /          |
-| 谷歌云盘 | 验证登录 | googleui | googleui_go | 客户端ID   | 客户端秘钥    | /          |
-| Yandex   | 验证登录 | yandexui | yandexui_go | AppID      | AppKey        | /          |
-
+| 网盘驱动     | 区域类型   | driver   | apps_types  | client_uid | client_key    | secret_key |
+|----------|--------| -------- |-------------|------------|---------------|------------|
+| Onedrive | 个人版本   | onedrive | onedrive_pr | 客户端ID      | 客户端秘钥         | /          |
+| Onedrive | 企业版本   | onedrive | onedrive_go | 客户端ID      | 客户端秘钥         | /          |
+| Onedrive | 世纪互联   | onedrive | onedrive_cn | 客户端ID      | 客户端秘钥         | /          |
+| Onedrive | 美国版本   | onedrive | onedrive_us | 客户端ID      | 客户端秘钥         | /          |
+| Onedrive | 德国版本   | onedrive | onedrive_de | 客户端ID      | 客户端秘钥         | /          |
+| 阿里云盘     | 跳转登录   | alicloud | alicloud_go | APP ID     | App Secret    | /          |
+| 阿里云盘     | 扫码登录   | alicloud | alicloud_qr | APP ID     | App Secret    | /          |
+| 阿里云盘     | 直接登录   | alicloud | alicloud_cs | /          | /             | /          |
+| 百度云盘     | 验证登录   | baiduyun | baiduyun_go | AppID      | AppKey        | SecretKey  |
+| 百度云盘     | OOB 登录 | baiduyun | baiduyun_go | /          | /             | /          |
+| 夸克云盘     | 验证登录   | quarkyun | quarkyun_fn | AppID      | SignKey       | /          |
+| 115 云盘   | 验证登录   | 115cloud | 115cloud_go | AppID      | AppSecret     | /          |
+| 123 云盘   | 验证登录   | 123cloud | 123cloud_go | client_id  | client_secret | /          |
+| 谷歌云盘     | 验证登录   | googleui | googleui_go | 客户端ID      | 客户端秘钥         | /          |
+| Yandex   | 验证登录   | yandexui | yandexui_go | AppID      | AppKey        | /          |
+| Dropbox  | 验证登录   | dropboxs | dropboxs_go | AppID      | AppKey        | /          |
 
 
 ## 部署方法

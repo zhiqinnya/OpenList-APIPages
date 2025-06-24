@@ -3,13 +3,15 @@ import {serveStatic} from 'hono/cloudflare-workers' // @ts-ignore
 import manifest from '__STATIC_CONTENT_MANIFEST'
 import * as oneui from './driver/onedrive_oa';
 import * as aliui from './driver/alicloud_oa';
-import * as aliui2 from './driver/alicloud_cs';
+import * as aliqr from './driver/alicloud_cs';
 import * as ui115 from './driver/115cloud_oa';
 import * as ui123 from './driver/123cloud_oa';
 import * as baidu from './driver/baiduyun_oa';
 import * as goapi from './driver/googleui_oa';
-import * as yandex from './driver/yandexui_oa';
+import * as yanui from './driver/yandexui_oa';
 import * as drops from './driver/dropboxs_oa';
+import * as quark from './driver/quarkpan_oa';
+import {apiRenew, getLogin, urlParse} from "./driver/quarkpan_oa";
 
 export type Bindings = {
     MAIN_URLS: string, baiduyun_ext: string,
@@ -64,24 +66,24 @@ app.get('/alicloud/renewapi', async (c: Context) => {
 
 // 阿里云盘扫码2 - 生成二维码 ##############################################################################
 app.get('/alicloud2/generate_qr', async (c: Context) => {
-    return aliui2.generateQR(c);
+    return aliqr.generateQR(c);
 });
 // 阿里云盘扫码2 - 检查登录状态 ##############################################################################
 app.get('/alicloud2/check_login', async (c: Context) => {
-    return aliui2.checkLogin(c);
+    return aliqr.checkLogin(c);
 });
 // 令牌刷新 ##############################################################################
 app.get('/alicloud2/renewapi', async (c: Context) => {
-    return aliui2.genToken(c);
+    return aliqr.genToken(c);
 });
 // 阿里云盘扫码2 - 获取用户信息 ##############################################################################
 app.get('/alicloud2/get_user_info', async (c: Context) => {
-    return aliui2.getUserInfo(c);
+    return aliqr.getUserInfo(c);
 });
 
 // 阿里云盘扫码2 - 退出登录 ##############################################################################
 app.get('/alicloud2/logout', async (c: Context) => {
-    return aliui2.logout(c);
+    return aliqr.logout(c);
 });
 
 // 登录申请 ##############################################################################
@@ -146,17 +148,33 @@ app.get('/googleui/renewapi', async (c: Context) => {
 
 // 登录申请 ##############################################################################
 app.get('/yandexui/requests', async (c: Context) => {
-    return yandex.yandexLogin(c)
+    return yanui.yandexLogin(c)
 });
 
 // 令牌申请 ##############################################################################
 app.get('/yandexui/callback', async (c: Context) => {
-    return yandex.yandexCallBack(c)
+    return yanui.yandexCallBack(c)
 });
 
 // 令牌刷新 ##############################################################################
 app.get('/yandexui/renewapi', async (c: Context) => {
-    return yandex.genToken(c);
+    return yanui.genToken(c);
 });
+
+// 登录申请 ##############################################################################
+app.get('/quarkyun/requests', async (c) => {
+    return await quark.getLogin(c);
+});
+
+// 令牌申请 ##############################################################################
+app.get('/quarkyun/callback', async (c) => {
+    return await quark.urlParse(c);
+});
+
+// 令牌刷新 ##############################################################################
+app.get('/quarkyun/renewapi', async (c) => {
+    return await quark.apiRenew(c);
+});
+
 
 export default app

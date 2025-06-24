@@ -2,7 +2,7 @@ import {Context} from "hono";
 import * as local from "hono/cookie";
 import * as configs from "../shares/configs";
 import * as refresh from "../shares/refresh";
-import {getCookie, setCookie} from "../shares/request";
+import {getCookie, setCookie} from "../shares/cookies";
 import {pubLogin} from "../shares/oauthv2";
 import {encodeCallbackData, Secrets} from "../shares/secrets";
 

@@ -1,7 +1,7 @@
 import {Context} from "hono";
 import {pubLogin} from "../shares/oauthv2"
 import * as configs from "../shares/configs";
-import {getCookie, setCookie} from "../shares/request";
+import {getCookie, setCookie} from "../shares/cookies";
 import {pubParse} from "../shares/urlback";
 import {pubRenew} from "../shares/refresh";
 

@@ -1,6 +1,6 @@
 import * as local from "hono/cookie";
 import {Context} from "hono";
-import {setCookie} from "../shares/request";
+import {setCookie} from "../shares/cookies";
 import {pubLogin} from "../shares/oauthv2";
 import * as configs from "../shares/configs";
 

@@ -1,7 +1,7 @@
 // 登录申请 ##############################################################################
 import {Context} from "hono";
 import {Requests} from "./request";
-
+import {getDynamicValue} from './findvar'
 
 export async function pubLogin(c: Context,
                                Params: Record<string, string> | string,
@@ -17,7 +17,8 @@ export async function pubLogin(c: Context,
     if (Finder === "json") return result_json;
     if (result_json.text) return c.json(result_json, 500);
     if (Direct) return c.json({text: result_json.url}, 200);
-    if (result_json[Finder]) return c.json({text: result_json[Finder]}, 200);
+    if (getDynamicValue(result_json, Finder))
+        return c.json({text: getDynamicValue(result_json, Finder)}, 200);
     return c.json("Error login POST", 500)
 }
 

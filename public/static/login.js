@@ -92,7 +92,7 @@ async function getLogin(refresh = false) {
             if (driver_txt === "baiduyun_go" || driver_txt === "alicloud_go"
                 || driver_pre === "onedrive" || driver_pre === "115cloud"
                 || driver_pre === "googleui" || driver_pre === "yandexui"
-                || driver_pre === "dropboxs"
+                || driver_pre === "dropboxs" || driver_pre === "quarkyun"
             ) {
                 window.location.href = response_data.text;
             }
