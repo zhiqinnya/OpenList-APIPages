@@ -1,6 +1,6 @@
 import {Context, Hono} from 'hono'
 import {serveStatic} from 'hono/cloudflare-workers' // @ts-ignore
-import manifest from '__STATIC_CONTENT_MANIFEST'
+// import manifest from '__STATIC_CONTENT_MANIFEST'
 import * as oneui from './driver/onedrive_oa';
 import * as aliui from './driver/alicloud_oa';
 import * as aliqr from './driver/alicloud_cs';
