@@ -45,11 +45,14 @@ export async function alyLogin(c: Context) {
     // QR扫码需要增加的参数 =============================================================
     if (clients.drivers == "alicloud_tv") {
         request_urls = driver_map[2]
+        params_info.client_id = undefined
+        params_info.scopes = ['user:base', 'file:all:read', 'file:all:write']
         params_info = {
             "iv": "iv",
             "ciphertext": "ciphertext"
         }
-    } else if (clients.drivers == "alicloud_go") {
+    } else
+        if (clients.drivers == "alicloud_go") {
         params_info.redirect_uri = 'https://' + c.env.MAIN_URLS + '/alicloud/callback'
         params_info.response_type = 'code'
         params_info.scope = ['user:base', 'file:all:read', 'file:all:write']
@@ -68,6 +71,7 @@ export async function alyLogin(c: Context) {
     const result = await pubLogin(c, JSON.stringify(params_info), request_urls,
         false, "POST", "json",
         {'Content-Type': 'application/json'});
+    console.log(result);
     if (!result.qrCodeUrl) return c.json({"text": result.message}, 500);
     return c.json({"text": result.qrCodeUrl, "sid": result.sid}, 200);
 }
