@@ -41,25 +41,22 @@ export async function alyLogin(c: Context) {
     // 通用参数 =========================================================================
     let params_info: Record<string, any> = {
         client_id: clients.servers ? c.env.alicloud_uid : clients.app_uid,
+        scopes: ['user:base', 'file:all:read', 'file:all:write']
     }
     // QR扫码需要增加的参数 =============================================================
     if (clients.drivers == "alicloud_tv") {
         request_urls = driver_map[2]
         params_info.client_id = undefined
-        params_info.scopes = ['user:base', 'file:all:read', 'file:all:write']
-        params_info = {
+        params_info.params_info = {
             "iv": "iv",
             "ciphertext": "ciphertext"
         }
-    } else
-        if (clients.drivers == "alicloud_go") {
+    } else if (clients.drivers == "alicloud_go") {
         params_info.redirect_uri = 'https://' + c.env.MAIN_URLS + '/alicloud/callback'
         params_info.response_type = 'code'
-        params_info.scope = ['user:base', 'file:all:read', 'file:all:write']
     } else {
         request_urls += "/qrcode"
         params_info.client_secret = client_secret
-        params_info.scopes = ['user:base', 'file:all:read', 'file:all:write']
     }
     //需要保存数据到浏览器本地 ==========================================================
     setCookie(c, clients)
