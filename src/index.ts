@@ -1,6 +1,4 @@
 import {Context, Hono} from 'hono'
-import {serveStatic} from 'hono/cloudflare-workers' // @ts-ignore
-import manifest from '__STATIC_CONTENT_MANIFEST'
 import * as oneui from './driver/onedrive_oa';
 import * as aliui from './driver/alicloud_oa';
 import * as aliqr from './driver/alicloud_cs';
@@ -11,7 +9,6 @@ import * as goapi from './driver/googleui_oa';
 import * as yanui from './driver/yandexui_oa';
 import * as drops from './driver/dropboxs_oa';
 import * as quark from './driver/quarkpan_oa';
-import {apiRenew, getLogin, urlParse} from "./driver/quarkpan_oa";
 
 export type Bindings = {
     MAIN_URLS: string, baiduyun_ext: string,
@@ -25,7 +22,7 @@ export type Bindings = {
 }
 
 export const app = new Hono<{ Bindings: Bindings }>()
-app.use("*", serveStatic({manifest: manifest, root: "./"}));
+
 // 登录申请 ##############################################################################
 app.get('/dropboxs/requests', async (c) => {
     return drops.getLogin(c);
