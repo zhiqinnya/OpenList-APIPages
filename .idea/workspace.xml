@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="mod(driver): modify aliyun output">
+    <list default="true" id="987ac7e2-ceaa-49a2-b5c9-aed65a7c598d" name="更改" comment="mod(index): move cf-app to cfapp.ts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/static/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/static/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/driver/alicloud_oa.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/alicloud_oa.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,26 +50,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;G:/Codes/OpenListTeam/OpenList-APIPages&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.language.and.region&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\pikachuren\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "G:/Codes/OpenListTeam/OpenList-APIPages/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.language.and.region",
+    "ts.external.directory.path": "C:\\Users\\pikachuren\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\Codes\OpenListTeam\OpenList-APIPages\src" />
       <recent name="G:\AList\cf-worker-api\src\driver" />
       <recent name="G:\AList\cf-worker-api" />
       <recent name="G:\AList\cf-worker-api\src" />
@@ -108,7 +108,7 @@
       <workItem from="1750731858668" duration="12450000" />
       <workItem from="1750753666615" duration="21205000" />
       <workItem from="1750997980031" duration="50000" />
-      <workItem from="1750998038649" duration="5053000" />
+      <workItem from="1750998038649" duration="15925000" />
     </task>
     <task id="LOCAL-00001" summary="fin onedrive official token">
       <option name="closed" value="true" />
@@ -310,7 +310,31 @@
       <option name="project" value="LOCAL" />
       <updated>1750837660247</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="add(driver): add 429 show error">
+      <option name="closed" value="true" />
+      <created>1751255308304</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1751255308304</updated>
+    </task>
+    <task id="LOCAL-00027" summary="fix(index): fix aliyun client select error">
+      <option name="closed" value="true" />
+      <created>1751256336845</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1751256336845</updated>
+    </task>
+    <task id="LOCAL-00028" summary="mod(index): move cf-app to cfapp.ts">
+      <option name="closed" value="true" />
+      <created>1751257070718</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1751257070719</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -339,6 +363,9 @@
     <MESSAGE value="mod readme" />
     <MESSAGE value="mod(readme): modify docs&#10;add(driver): quark cloud" />
     <MESSAGE value="mod(driver): modify aliyun output" />
-    <option name="LAST_COMMIT_MESSAGE" value="mod(driver): modify aliyun output" />
+    <MESSAGE value="add(driver): add 429 show error" />
+    <MESSAGE value="fix(index): fix aliyun client select error" />
+    <MESSAGE value="mod(index): move cf-app to cfapp.ts" />
+    <option name="LAST_COMMIT_MESSAGE" value="mod(index): move cf-app to cfapp.ts" />
   </component>
 </project>
