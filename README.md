@@ -12,7 +12,9 @@
 
 - #### 接口地址
 
-#### `https://api.oplist.org/<driver>/requests`
+#### 全球地址：`https://api.oplist.org/<driver>/requests`
+
+#### 国内地址：`https://api-cn.oplist.org/<driver>/requests`
 
 - #### 接口参数
 
@@ -116,13 +118,24 @@
 
 ## 部署方法
 
-### 克隆代码
+### 一键部署
+
+#### EdgeOne Functions
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https://github.com/OpenListTeam/OpenList-APIPages)
+
+#### Cloudflare Worker
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/OpenListTeam/OpenList-APIPages)
+
+### 手动部署
+
+#### 克隆代码
 
 ```shell
 git clone https://github.com/OpenListTeam/cf-worker-api.git
 ```
 
-### 修改配置
+#### 修改配置
 
 创建并修改`wrangler.jsonc`
 
@@ -155,14 +168,14 @@ cp wrangler.jsonc.example wrangler.jsonc
   },
 ```
 
-### 测试代码
+#### 测试代码
 
 ```txt
 npm install
 npm run dev
 ```
 
-### 部署项目
+#### 部署项目
 
 ```txt
 npm run deploy
@@ -180,3 +193,7 @@ Pass the `CloudflareBindings` as generics when instantiation `Hono`:
 // src/index.ts
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 ```
+
+## 项目赞助
+本项目的中国站点边缘函数、CDN加速及安全防护由[Tencent EdgeOne](https://edgeone.ai/zh?from=github)赞助
+<img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" style="width: 500px" />
