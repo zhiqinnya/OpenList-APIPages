@@ -12,10 +12,13 @@
 
 #### EdgeOne Functions
 [![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https://github.com/OpenListTeam/OpenList-APIPages)
+部署完成后，请登录EdgeOne Functions后台，修改环境变量，请参考[变量说明](#变量说明)部分
+
+
 
 #### Cloudflare Worker
-
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/OpenListTeam/OpenList-APIPages)
+部署完成后，请登录Cloudflare Worker后台，修改环境变量，请参考[变量说明](#变量说明)部分
 
 ### 手动部署
 
@@ -36,7 +39,6 @@ cp wrangler.jsonc.example wrangler.jsonc
 修改变量信息：
  - MAIN_URLS：部署回调地址的域名
  - 其他参数?：各个网盘的应用信息
- - 
 ```
   "vars": {
     "MAIN_URLS": "api.example.com",
@@ -54,34 +56,58 @@ cp wrangler.jsonc.example wrangler.jsonc
     "yandexui_uid": "*****************************",
     "yandexui_key": "*****************************",
     "dropboxs_uid": "*****************************",
-    "dropboxs_key": "*****************************"
+    "dropboxs_key": "*****************************",
+    "quarkpan_uid": "*****************************",
+    "quarkpan_key": "*****************************"
   },
 ```
 
+
+
+### 变量说明变量说明
+
+| 变量名称       | 必要 | 变量类型 | 变量说明                          |
+| -------------- | ---- | -------- | --------------------------------- |
+| `MAIN_URLS`    | 是   | string   | 绑定主域名，示例：api.example.com |
+| `onedrive_uid` | 否   | string   | OneDrive 客户端ID                 |
+| `onedrive_key` | 否   | string   | OneDrive 客户端密钥               |
+| `alicloud_uid` | 否   | string   | 阿里云盘开发者AppID               |
+| `alicloud_key` | 否   | string   | 阿里云盘开发者AppKey              |
+| `baiduyun_uid` | 否   | string   | 百度网盘应用密钥AppKey            |
+| `baiduyun_key` | 否   | string   | 百度网盘应用密钥SecretKey         |
+| `cloud115_uid` | 否   | string   | 115网盘应用ID                     |
+| `cloud115_key` | 否   | string   | 115网盘应用密钥                   |
+| `googleui_uid` | 否   | string   | 谷歌客户端ID                      |
+| `googleui_key` | 否   | string   | 谷歌全局API Key                   |
+| `yandexui_uid` | 否   | string   | Yandex应用ID                      |
+| `yandexui_key` | 否   | string   | Yandex应用密钥                    |
+| `dropboxs_uid` | 否   | string   | Dropboxx应用ID                    |
+| `dropboxs_key` | 否   | string   | Dropbox应用密钥                   |
+| `quarkpan_uid` | 否   | string   | 夸克云盘x应用ID                   |
+| `quarkpan_key` | 否   | string   | 夸克云盘应用密钥                  |
+
+
+
 #### 测试代码
 
-```txt
+```shell
 npm install
-npm run dev
+
+# 以Cloudflare Worker环境运行 
+npm run dev-cf 
+
+# 以Edgeone Functions环境运行 
+npm run dev-eo 
 ```
 
 #### 部署项目
 
-```txt
-npm run deploy
-```
+```shell
+# 以Cloudflare Worker环境部署
+npm run deploy-cf
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
-
-```txt
-npm run cf-typegen
-```
-
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
-
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
+# 以Edgeone Functions环境部署 
+npm run deploy-eo 
 ```
 
 ## 接口文档
