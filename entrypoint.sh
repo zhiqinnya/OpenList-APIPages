@@ -1,5 +1,5 @@
 #/bin/bash
-# "MAIN_URLS": "api.oplist.org",
+# "MAIN_URLS": "",
 # "onedrive_uid": "",
 # "onedrive_key": "",
 # "alicloud_uid": "",
@@ -7,17 +7,21 @@
 # "baiduyun_uid": "",
 # "baiduyun_key": "",
 # "baiduyun_ext": "",
-# "115cloud_uid": "",
-# "115cloud_key": "",
+# "cloud115_uid": "",
+# "cloud115_key": "",
 # "googleui_uid": "",
-# "googleui_key": ""
+# "googleui_key": "",
 # "yandexui_uid": "",
-# "yandexui_key": ""
+# "yandexui_key": "",
+# "dropboxs_uid": "",
+# "dropboxs_key": "",
+# "quarkpan_uid": "",
+# "quarkpan_key": "",
+
 #替换目录下wrangler文件中的MAIN_URLS
 if [ -z "${OPLIST_MAIN_URLS}" ]; then
     echo "MAIN_URLS is not set, skipping replacement."
 else
-    #"MAIN_URLS": "api.oplist.org" > "MAIN_URLS" : "${OPLIST_MAIN_URLS",
     echo "Replacing MAIN_URLS in wrangler file..."
     sed -i "s|\"MAIN_URLS\":.*|\"MAIN_URLS\": \"${OPLIST_MAIN_URLS}\",|" ./wrangler.jsonc
 fi
@@ -70,12 +74,12 @@ else
     echo "Replacing baiduyun_ext in wrangler file..."
     sed -i "s|\"baiduyun_ext\":.*|\"baiduyun_ext\": \"${OPLIST_BAIDUYUN_EXT}\",|" ./wrangler.jsonc
 fi
-#替换目录下wrangler文件中的115cloud_uid
-if [ -z "${OPLIST_115CLOUD_UID}" ]; then
-    echo "115CLOUD_UID is not set, skipping replacement."
+#替换目录下wrangler文件中的cloud115_uid
+if [ -z "${OPLIST_cloud115_uid}" ]; then
+    echo "cloud115_uid is not set, skipping replacement."
 else
-    echo "Replacing 115cloud_uid in wrangler file..."
-    sed -i "s|\"115cloud_uid\":.*|\"115cloud_uid\": \"${OPLIST_115CLOUD_UID}\",|" ./wrangler.jsonc
+    echo "Replacing cloud115_uid in wrangler file..."
+    sed -i "s|\"cloud115_uid\":.*|\"cloud115_uid\": \"${OPLIST_cloud115_uid}\",|" ./wrangler.jsonc
 fi
 #替换目录下wrangler文件中的115cloud_key
 if [ -z "${OPLIST_115CLOUD_KEY}" ]; then
@@ -112,6 +116,36 @@ else
     echo "Replacing yandexui_key in wrangler file..."
     sed -i "s|\"yandexui_key\":.*|\"yandexui_key\": \"${OPLIST_YANDEXUI_KEY}\",|" ./wrangler.jsonc
 fi
+# 替换目录下wrangler文件中的dropboxs_uid
+if [ -z "${OPLIST_DROPBOXS_UID}" ]; then
+    echo "DROPBOXS_UID is not set, skipping replacement."
+else
+    echo "Replacing dropboxs_uid in wrangler file..."
+    sed -i "s|\"dropboxs_uid\":.*|\"dropboxs_uid\": \"${OPLIST_DROPBOXS_UID}\",|" ./wrangler.jsonc
+fi
+# 替换目录下wrangler文件中的dropboxs_key
+if [ -z "${OPLIST_DROPBOXS_KEY}" ]; then
+    echo "DROPBOXS_KEY is not set, skipping replacement."
+else
+    echo "Replacing dropboxs_key in wrangler file..."
+    sed -i "s|\"dropboxs_key\":.*|\"dropboxs_key\": \"${OPLIST_DROPBOXS_KEY}\",|" ./wrangler.jsonc
+fi
+# 替换目录下wrangler文件中的quarkpan_uid
+if [ -z "${OPLIST_QUARKPAN_UID}" ]; then
+    echo "QUARKPAN_UID is not set, skipping replacement."
+else
+    echo "Replacing quarkpan_uid in wrangler file..."
+    sed -i "s|\"quarkpan_uid\":.*|\"quarkpan_uid\": \"${OPLIST_QUARKPAN_UID}\",|" ./wrangler.jsonc
+fi
+# 替换目录下wrangler文件中的quarkpan_key
+if [ -z "${OPLIST_QUARKPAN_KEY}" ]; then
+    echo "QUARKPAN_KEY is not set, skipping replacement."
+else
+    echo "Replacing quarkpan_key in wrangler file..."
+    sed -i "s|\"quarkpan_key\":.*|\"quarkpan_key\": \"${OPLIST_QUARKPAN_KEY}\",|" ./wrangler.jsonc
+fi
+
+
 echo "Modified wrangler.jsonc file:"
 cat ./wrangler.jsonc
 # 执行npm run dev
