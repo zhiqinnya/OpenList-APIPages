@@ -27,7 +27,7 @@
 #### 克隆代码
 
 ```shell
-git clone https://github.com/OpenListTeam/cf-worker-api.git
+git clone https://github.com/OpenListTeam/OpenList-APIPages.git
 ```
 
 #### 修改配置
@@ -35,7 +35,7 @@ git clone https://github.com/OpenListTeam/cf-worker-api.git
 创建并修改`wrangler.jsonc`
 
 ```shell
-cp wrangler.jsonc.example wrangler.jsonc
+cp wrangler.example.jsonc wrangler.jsonc
 ```
 
 修改变量信息：
