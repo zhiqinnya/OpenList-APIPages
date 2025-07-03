@@ -32,12 +32,15 @@ function onSelect() {
     const serverUseContainer = server_use_input.closest('.mb-3');
     const callbackContainer = direct_url_input.closest('.mb-3');
     // 阿里云盘扫码登录v2不需要客户端ID、应用机密和回调地址 ================
-    if (driver_txt_input.value === "alicloud_cs") {
+    if (driver_txt_input.value === "alicloud_cs"
+        || driver_txt_input.value === "alicloud_tv"
+    ) {
         // 隐藏整个字段容器
         clientIdContainer.style.display = 'none';
         appSecretContainer.style.display = 'none';
         serverUseContainer.style.display = 'none';
         callbackContainer.style.display = 'none';
+        server_use_input.checked = true;
     } else {
         clientIdContainer.style.display = 'block';
         appSecretContainer.style.display = 'block';
