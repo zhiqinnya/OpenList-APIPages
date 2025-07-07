@@ -1,9 +1,12 @@
 FROM node:lts-alpine
 WORKDIR /app
+RUN npm install -g webpack
+COPY .env.example .env
 COPY entrypoint-lite.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
-COPY dist ./dist
+COPY package*.json ./
 COPY public ./public
-COPY .env.example .env
+COPY src ./src
+RUN npm install
 EXPOSE 3000
 ENTRYPOINT ["sh","/app/entrypoint.sh"]
