@@ -106,26 +106,26 @@ docker run -d --name oplist-api-server \
 
 #### 环境变量说明
 
-| 变量名称       | 必要 | 变量类型 | 变量说明                          |
-| -------------- | ---- | -------- | --------------------------------- |
+| 变量名称       | 必要 | 变量类型 | 变量说明                     |
+| -------------- | ---- | -------- |--------------------------|
 | `OPLIST_MAIN_URLS`    | 是   | string   | 绑定主域名，示例：api.example.com |
-| `OPLIST_ONEDRIVE_UID` | 否   | string   | OneDrive 客户端ID                 |
-| `OPLIST_ONEDRIVE_KEY` | 否   | string   | OneDrive 客户端密钥               |
-| `OPLIST_ALICLOUD_UID` | 否   | string   | 阿里云盘开发者AppID               |
-| `OPLIST_ALICLOUD_KEY` | 否   | string   | 阿里云盘开发者AppKey              |
-| `OPLIST_BAIDUYUN_UID` | 否   | string   | 百度网盘应用密钥AppKey            |
-| `OPLIST_BAIDUYUN_KEY` | 否   | string   | 百度网盘应用密钥SecretKey         |
-| `OPLIST_BAIDUYUN_EXT` | 否   | string   | 百度网盘应用ext         |
-| `OPLIST_CLOUD115_UID` | 否   | string   | 115网盘应用ID                     |
-| `OPLIST_CLOUD115_KEY` | 否   | string   | 115网盘应用密钥                   |
-| `OPLIST_GOOGLEUI_UID` | 否   | string   | 谷歌客户端ID                      |
-| `OPLIST_GOOGLEUI_KEY` | 否   | string   | 谷歌全局API Key                   |
-| `OPLIST_YANDEXUI_UID` | 否   | string   | Yandex应用ID                      |
-| `OPLIST_YANDEXUI_KEY` | 否   | string   | Yandex应用密钥                    |
-| `OPLIST_DROPBOXS_UID` | 否   | string   | Dropboxx应用ID                    |
-| `OPLIST_DROPBOXS_KEY` | 否   | string   | Dropbox应用密钥                   |
-| `OPLIST_QUARKPAN_UID` | 否   | string   | 夸克云盘x应用ID                   |
-| `OPLIST_QUARKPAN_KEY` | 否   | string   | 夸克云盘应用密钥                  |
+| `OPLIST_ONEDRIVE_UID` | 否   | string   | OneDrive 客户端ID           |
+| `OPLIST_ONEDRIVE_KEY` | 否   | string   | OneDrive 客户端密钥           |
+| `OPLIST_ALICLOUD_UID` | 否   | string   | 阿里云盘开发者AppID             |
+| `OPLIST_ALICLOUD_KEY` | 否   | string   | 阿里云盘开发者AppKey            |
+| `OPLIST_BAIDUYUN_UID` | 否   | string   | 百度网盘应用UID                |
+| `OPLIST_BAIDUYUN_KEY` | 否   | string   | 百度网盘应用密钥AppKey           |
+| `OPLIST_BAIDUYUN_EXT` | 否   | string   | 百度网盘应用SecretKey          |
+| `OPLIST_CLOUD115_UID` | 否   | string   | 115网盘应用ID                |
+| `OPLIST_CLOUD115_KEY` | 否   | string   | 115网盘应用密钥                |
+| `OPLIST_GOOGLEUI_UID` | 否   | string   | 谷歌客户端ID                  |
+| `OPLIST_GOOGLEUI_KEY` | 否   | string   | 谷歌全局API Key              |
+| `OPLIST_YANDEXUI_UID` | 否   | string   | Yandex应用ID               |
+| `OPLIST_YANDEXUI_KEY` | 否   | string   | Yandex应用密钥               |
+| `OPLIST_DROPBOXS_UID` | 否   | string   | Dropboxx应用ID             |
+| `OPLIST_DROPBOXS_KEY` | 否   | string   | Dropbox应用密钥              |
+| `OPLIST_QUARKPAN_UID` | 否   | string   | 夸克云盘x应用ID                |
+| `OPLIST_QUARKPAN_KEY` | 否   | string   | 夸克云盘应用密钥                 |
 
 
 ### 变量说明
