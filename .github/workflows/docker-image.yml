@@ -39,8 +39,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: false
-        tags: openlistteam/openlist_api_server
-        labels: latest
+        tags: openlistteam/openlist_api_server:latest
 
     - name: Build and push Docker Image
       uses: docker/build-push-action@v3
@@ -48,8 +47,7 @@ jobs:
         context: .
         file: ./Dockerfile-Lite
         push: false
-        tags: openlistteam/openlist_api_server
-        labels: alpine
+        tags: openlistteam/openlist_api_server:alpine
 
     - name: Push Docker Image to ghcrio
       run:     docker push openlistteam/openlist_api_server:latest
