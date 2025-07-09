@@ -11,7 +11,7 @@
 ### 一键部署
 
 #### EdgeOne Functions
-[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https://github.com/OpenListTeam/OpenList-APIPages)
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?project-name=oplist-api&repository-url=https://github.com/OpenListTeam/OpenList-APIPages&build-command=npm%20run%20build-eo&install-command=npm%20install&output-directory=public&root-directory=./&env=MAIN_URLS,onedrive_uid,onedrive_key,alicloud_uid,alicloud_key,baiduyun_uid,baiduyun_key,baiduyun_ext,cloud115_uid,cloud115_key,googleui_uid,googleui_key,yandexui_uid,yandexui_key,dropboxs_uid,dropboxs_key,quarkpan_uid,quarkpan_key)
 
 部署完成后，请登录EdgeOne Functions后台，修改环境变量，请参考[变量说明](#变量说明)部分
 
