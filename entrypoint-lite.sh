@@ -1,9 +1,5 @@
 #/bin/bash
 
-
-
-#/bin/bash
-
 # 替换.env文件中的MAIN_URLS
 if [ -z "${OPLIST_MAIN_URLS}" ]; then
     echo "MAIN_URLS is not set, skipping replacement."
@@ -150,7 +146,7 @@ fi
 
 # 执行npm run dev
 echo "Starting wrangler dev..."
-npm run dev-js
+npm run build-js && npm run deploy-js
 if [ $? -ne 0 ]; then
     echo "wrangler dev failed, exiting."
     exit 1
