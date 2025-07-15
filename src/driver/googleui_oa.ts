@@ -142,6 +142,8 @@ function getRandomString(length: number): string {
 export async function genToken(c: Context) {
     const clients_info: configs.Clients | undefined = configs.getInfo(c);
     const refresh_text: string | undefined = c.req.query('refresh_ui');
+    let server_url: string = driver_map[1];
+    if (c.env.PROXY_API.length > 0) server_url = "https://" + c.env.PROXY_API + "/token";
     if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
     if (!refresh_text) return c.json({text: "缺少刷新令牌"}, 500);
     // 请求参数 ==========================================================================
@@ -151,5 +153,5 @@ export async function genToken(c: Context) {
         grant_type: 'refresh_token',
         refresh_token: refresh_text
     };
-    return await refresh.pubRenew(c, driver_map[1], params, "POST", "access_token", "copy", "none");
+    return await refresh.pubRenew(c, server_url, params, "POST", "access_token", "copy", "none");
 }
