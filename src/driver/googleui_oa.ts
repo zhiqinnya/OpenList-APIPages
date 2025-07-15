@@ -88,10 +88,21 @@ export async function oneToken(c: Context) {
     // 执行请求 ===========================================================================
     try {
         const paramsString = new URLSearchParams(params_all).toString();
-        const response: Response = await fetch(server_url, {
-            method: 'POST', body: paramsString,
-            headers: {'Content-Type': 'application/x-www-form-urlencoded',},
-        });
+        let try_time: number = 5;
+        let response: Response | null = null;
+        while (try_time > 0) {
+            try {
+                response = await fetch(server_url, {
+                    method: 'POST', body: paramsString,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded',},
+                });
+                break;
+            } catch (error) {
+                try_time -= 1;
+            }
+        }
+        if (!try_time || !response) return c.redirect(
+            showErr("多次尝试获取Token失败"));
         if (server_use == "false") {
             local.deleteCookie(c, 'client_uid');
             local.deleteCookie(c, 'client_key');
