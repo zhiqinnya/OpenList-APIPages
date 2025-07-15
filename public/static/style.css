@@ -278,3 +278,19 @@ a {
     background-color: #2a2a3b;
     color: #f0f0f0;
 }
+
+
+@font-face {
+    font-family: 'MapleMono';         /* 自定义字体名称 */
+    src: url('fonts.woff2') format('woff2'); /* 本地文件路径 */
+    font-weight: normal;                /* 字重 */
+    font-style: normal;                 /* 样式 */
+    font-display: swap;                 /* 优化加载（可选） */
+}
+
+
+* {
+    font-family: "MapleMono", monospace;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
