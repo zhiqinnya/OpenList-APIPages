@@ -3,7 +3,7 @@ import {Context} from "hono";
 import {showErr} from "../shares/message";
 import * as configs from "../shares/configs";
 import * as refresh from "../shares/refresh";
-import {encodeCallbackData,Secrets} from "../shares/secrets";
+import {encodeCallbackData, Secrets} from "../shares/secrets";
 
 const driver_map: string[] = [
     "https://accounts.google.com/o/oauth2/v2/auth",
@@ -51,8 +51,9 @@ export async function oneLogin(c: Context) {
 // 令牌申请 ##############################################################################
 export async function oneToken(c: Context) {
     let login_data, client_uid, client_key, random_key, server_use;
-    let driver_txt, params_all, random_uid;
+    let driver_txt, params_all, random_uid, server_url: string = driver_map[1];
     try { // 请求参数 ====================================================================
+        if (c.env.PROXY_API.length > 0) server_url = "https://" + c.env.PROXY_API + "/token";
         login_data = <string>c.req.query('code');
         random_uid = <string>c.req.query('state');
         server_use = local.getCookie(c, 'server_use')
@@ -87,7 +88,7 @@ export async function oneToken(c: Context) {
     // 执行请求 ===========================================================================
     try {
         const paramsString = new URLSearchParams(params_all).toString();
-        const response: Response = await fetch(driver_map[1], {
+        const response: Response = await fetch(server_url, {
             method: 'POST', body: paramsString,
             headers: {'Content-Type': 'application/x-www-form-urlencoded',},
         });
@@ -139,5 +140,5 @@ export async function genToken(c: Context) {
         grant_type: 'refresh_token',
         refresh_token: refresh_text
     };
-    return await refresh.pubRenew(c, driver_map[1], params, "POST","access_token","copy","none");
+    return await refresh.pubRenew(c, driver_map[1], params, "POST", "access_token", "copy", "none");
 }

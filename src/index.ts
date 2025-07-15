@@ -11,7 +11,10 @@ import * as drops from './driver/dropboxs_oa';
 import * as quark from './driver/quarkpan_oa';
 
 export type Bindings = {
-    MAIN_URLS: string, baiduyun_ext: string,
+    // 基本配置 ================================
+    MAIN_URLS: string, PROXY_API: string | null,
+    // 密钥参数 ================================
+    baiduyun_ext: string,
     onedrive_uid: string, onedrive_key: string,
     alicloud_uid: string, alicloud_key: string,
     baiduyun_uid: string, baiduyun_key: string,
