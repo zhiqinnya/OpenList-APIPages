@@ -14,7 +14,7 @@ const acceptGoogleConsent = closeGoogleConsentModal = () => {
 }
 
 async function showErrorMessage(actText = "", errText = "", errCode = 0) {
-    console.log(errText, errCode);
+    //console.log(errText, errCode);
     if (errCode === 429)
         await Swal.fire({
             position: 'top',

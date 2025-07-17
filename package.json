@@ -4,7 +4,7 @@
     "dev-js": "tsx watch src/basic.ts",
     "build-js": "webpack --mode production",
     "deploy-js": "node dist/bundle.js",
-    "dev-cf": "wrangler dev",
+    "dev-cf": "wrangler dev --config wrangler.encrypt.jsonc",
     "deploy-cf": "wrangler deploy --minify --config wrangler.encrypt.jsonc",
     "dev-eo": "edgeone pages dev",
     "build-eo": "edgeone pages build",

@@ -372,12 +372,12 @@ class AliyunPanTvToken {
                 ciphertext: encrypted.ciphertext
             };
 
-            console.log("[*] (Sign) Request Body:", JSON.stringify(reqBody));
+            //console.log("[*] (Sign) Request Body:", JSON.stringify(reqBody));
 
             const sign = await this.computeSign("POST", "/v4/token");
             const headers = this.getHeaders(sign);
 
-            console.log("[*] (Sign) Headers:", headers);
+            //console.log("[*] (Sign) Headers:", headers);
 
             const response = await fetch(
                 "https://api.extscreen.com/aliyundrive/v4/token",
@@ -388,9 +388,9 @@ class AliyunPanTvToken {
                 }
             );
 
-            console.log("[*] (Sign) Response Status:", response.status);
+            //console.log("[*] (Sign) Response Status:", response.status);
             const responseData = await response.json() as ApiResponse;
-            console.log("[*] (Sign) Response Body:", responseData);
+            //console.log("[*] (Sign) Response Body:", responseData);
 
             // 类型安全检查
             if (!responseData) {
@@ -439,7 +439,7 @@ class AliyunPanTvToken {
                 ciphertext: encrypted.ciphertext
             };
 
-            console.log("[*] (Qrcode) Request Body:", JSON.stringify(reqBody));
+            //console.log("[*] (Qrcode) Request Body:", JSON.stringify(reqBody));
 
             const sign = await this.computeSign("POST", "/v2/qrcode");
             const headers = this.getHeaders(sign);
