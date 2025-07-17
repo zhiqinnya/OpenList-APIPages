@@ -4,7 +4,8 @@
 
 用于OpenList获取部分网盘API的接口和页面
 
-部署地址：[OpenList Token 获取工具](https://api.oplist.org/)
+部署地址：[OpenList Token 获取工具 - 全球站点](https://api.oplist.org/)
+部署地址：[OpenList Token 获取工具 - 中国大陆](https://api.oplist.org/)
 
 ## 部署方法
 
@@ -42,6 +43,7 @@ docker pull ghcr.io/openlistteam/openlist_api_server:latest
 docker run -d --name oplist-api-server \
   -p 3000:3000 \
   -e OPLIST_MAIN_URLS="api.example.com" \
+  -e OPLIST_PROXY_API="gts.example.com" \
   -e OPLIST_ONEDRIVE_UID= `#optional` \
   -e OPLIST_ONEDRIVE_KEY= `#optional` \
   -e OPLIST_ALICLOUD_UID= `#optional` \
@@ -72,6 +74,7 @@ docker run -d --name oplist-api-server \
 | 变量名称       | 必要 | 变量类型 | 变量说明                     |
 | -------------- | ---- | -------- |--------------------------|
 | `OPLIST_MAIN_URLS`    | 是   | string   | 绑定主域名，示例：api.example.com |
+| `OPLIST_PROXY_API`    | 否   | string   | 部署在大陆的节点需要指定代理谷歌  |
 | `OPLIST_ONEDRIVE_UID` | 否   | string   | OneDrive 客户端ID           |
 | `OPLIST_ONEDRIVE_KEY` | 否   | string   | OneDrive 客户端密钥           |
 | `OPLIST_ALICLOUD_UID` | 否   | string   | 阿里云盘开发者AppID             |
@@ -113,6 +116,7 @@ cp wrangler.example.jsonc wrangler.encrypt.jsonc
 ```
   "vars": {
     "MAIN_URLS": "api.example.com",
+    "PROXY_API": "gts.example.com",
     "onedrive_uid": "*****************************",
     "onedrive_key": "*****************************",
     "alicloud_uid": "*****************************",
@@ -135,9 +139,10 @@ cp wrangler.example.jsonc wrangler.encrypt.jsonc
 
 ### 变量说明
 
-| 变量名称       | 必要 | 变量类型 | 变量说明                     |
-| -------------- | ---- | -------- |--------------------------|
+| 变量名称       | 必要 | 变量类型 | 变量说明              |
+| -------------- | ---- | -------- |-------------------|
 | `MAIN_URLS`    | 是   | string   | 绑定主域名，示例：api.example.com |
+| `PROXY_API`    | 否   | string   | 部署在大陆的节点需要指定代理谷歌  |
 | `onedrive_uid` | 否   | string   | OneDrive 客户端ID           |
 | `onedrive_key` | 否   | string   | OneDrive 客户端密钥           |
 | `alicloud_uid` | 否   | string   | 阿里云盘开发者AppID             |
