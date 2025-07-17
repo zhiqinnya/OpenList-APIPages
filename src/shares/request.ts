@@ -14,7 +14,10 @@ export async function Requests(c: Context,
         let parma_str: string;
         const parma_url = new URL(APIUrl);
         if (typeof Params !== "string") {
-            parma_str = new URLSearchParams(Params).toString();
+            const params_map = Object.fromEntries(
+                Object.entries(Params).map(([k, v]) => [k, String(v ?? '')])
+            );
+            parma_str = new URLSearchParams(params_map).toString();
             Object.keys(Params).forEach(key => {
                 parma_url.searchParams.append(key, Params[key]);
             });
