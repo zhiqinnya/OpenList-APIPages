@@ -65,7 +65,7 @@ export async function alyLogin(c: Context) {
         false, "POST", "json",
         {'Content-Type': 'application/json'});
     // console.log(result);
-    if (!result.qrCodeUrl) return c.json({"text": result.message}, 500);
+    if (!result.qrCodeUrl) return c.json({"text": result.stringify()}, 500);
     return c.json({"text": result.qrCodeUrl, "sid": result.sid}, 200);
 }
 
